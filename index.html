@@ -18,15 +18,15 @@
   <!-- 共有リンクで来た人向けバナー -->
   <div id="share-banner" class="share-banner hidden">
     <span id="share-banner-text"></span>
+    <button id="btn-share-challenge" class="btn-secondary hidden">この事件に挑戦する</button>
   </div>
 
   <!-- 画面1: 場所・テーマ選択 -->
   <section id="screen-home" class="screen">
     <img class="hero-img" src="assets/key-visual.webp" alt="なぞまちワールド キービジュアル：雨の梅田の街並みとデジタル捜査マップ">
     <h1>どの街で、事件を起こす？</h1>
-    <p class="lead">場所を選ぶと、その場所でしか起きないミステリーが始まります。実在のスポットを巡って手がかりを集め、犯人とトリックを推理してください。</p>
+    <p class="lead">【未解決事件ファイル】大阪・京都・東京——実在の街で起きた怪事件を、君の推理で解決せよ。実在のスポットを巡って手がかりを集め、犯人とトリックを暴き出してください。</p>
     <div class="badge-row">
-      <span class="badge">⚡ シナリオは全て事前生成 — 待ち時間ゼロですぐ始まる</span>
       <span class="badge">🏠 おうちモード（Street View捜査）専用</span>
     </div>
 
@@ -37,13 +37,7 @@
     <div id="theme-list" class="chip-row"></div>
 
     <button id="btn-start" class="btn-primary" disabled>事件の幕を開ける</button>
-    <p class="note">※ おうちモード（Street View風の地図で捜査）で遊べます。所要時間 約10分<br>
-    ※ 場所は3拠点の選択式です。自由入力にしないのは、実在しないスポットや手がかりを捏造させないためです（実在性がこのゲームの命です）。</p>
-
-    <div class="roadmap-box">
-      <div class="roadmap-title">🗺️ 今後のロードマップ</div>
-      <p>GPSで実際に街を歩いて捜査する「まちモード」は、MVPではあえて作っていません。屋外での検証リスクを排除し、審査・デモ体験を安定させるため、次期ロードマップへ分離しました（Own the Why：二兎を追って核の体験がぶれるより、おうちモードを磨き切る判断です）。</p>
-    </div>
+    <p class="note">※ おうちモード（Street View風の地図で捜査）で遊べます。所要時間 約10分</p>
   </section>
 
   <!-- 画面2: 事件の導入 -->
@@ -78,11 +72,12 @@
     <div id="spot-detail" class="spot-detail hidden">
       <h3 id="spot-name"></h3>
       <p id="spot-fact" class="spot-fact"></p>
+      <div id="spot-analyzing" class="analyzing hidden">🔬 手がかりを解析中…</div>
       <div id="spot-clue" class="clue-box hidden">
         <div class="clue-label">🔎 手がかり発見！</div>
         <p id="spot-clue-text"></p>
       </div>
-      <button id="btn-collect" class="btn-secondary">ここを調べる（手がかりを集める）</button>
+      <button id="btn-collect" class="btn-secondary">🔍 現場検証する</button>
     </div>
 
     <div class="gm-panel">
@@ -99,6 +94,11 @@
     <h1>推理の時間</h1>
     <p class="lead">集めた手がかりをもとに、犯人とトリックを当ててください。外れても大丈夫。何度でも挑戦できます。</p>
 
+    <details id="notebook" class="notebook">
+      <summary id="notebook-summary">📋 捜査手帳（集めた手がかり 0件）</summary>
+      <div id="notebook-list" class="notebook-list"></div>
+    </details>
+
     <h2 class="step-title"><span class="step-num">Q1</span> 犯人は誰だ？</h2>
     <div id="suspect-list" class="option-list"></div>
 
@@ -113,6 +113,7 @@
   <!-- 画面5: 解決編 -->
   <section id="screen-result" class="screen hidden">
     <div class="solved-badge">🎉 事件解決！</div>
+    <div id="result-rank" class="rank-badge"></div>
     <h1 id="result-title"></h1>
 
     <h2 class="step-title">真相</h2>

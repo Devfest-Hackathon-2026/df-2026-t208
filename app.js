@@ -33,6 +33,7 @@ const SCENARIOS = {
     spots: [
       {
         name: "JR大阪駅 サウスゲート「太陽の広場」",
+        icon: "☀️",
         query: "大阪駅 太陽の広場",
         sv: "🗺️ Street View案内：大阪駅の南側、広場を見渡してみよう。ベンチが並ぶ一角が最初の捜査ポイントだ。",
         fact: "大阪ステーションシティには「時空（とき）の広場」「太陽の広場」など、テーマの異なる広場が点在し、待ち合わせや休憩の場所として親しまれている。",
@@ -40,6 +41,7 @@ const SCENARIOS = {
       },
       {
         name: "南ゲート広場「水の時計」",
+        icon: "💧",
         query: "大阪駅 水の時計",
         sv: "🗺️ Street View案内：駅の南側の広場。水滴が文字を描く時計が見えるはずだ。点検口のあたりに注目しよう。",
         fact: "「水の時計」は、水滴を落として時刻や模様を描く噴水時計。大阪駅前のシンボルとして、写真を撮る観光客が絶えない。",
@@ -47,6 +49,7 @@ const SCENARIOS = {
       },
       {
         name: "HEP FIVE 赤い観覧車",
+        icon: "🎡",
         query: "HEP FIVE 観覧車 梅田",
         sv: "🗺️ Street View案内：梅田の空に赤い観覧車が見える。ビルの屋上にある観覧車で、ゴンドラからは梅田を一望できる。",
         fact: "HEP FIVEの屋上にある赤い観覧車は梅田のランドマーク。地上約106mの高さまで上がる、ビル一体型の観覧車だ。",
@@ -54,6 +57,7 @@ const SCENARIOS = {
       },
       {
         name: "曾根崎お初天神通り・露天神社（お初天神）",
+        icon: "⛩️",
         query: "露天神社 お初天神 大阪",
         sv: "🗺️ Street View案内：曾根崎の路地を入った先にある、小さな神社。絵馬がたくさん掛かる場所を探そう。",
         fact: "露天神社は「お初天神」の名で親しまれる神社。近松門左衛門の人形浄瑠璃『曽根崎心中』の舞台となり、お初と徳兵衛の物語で知られる縁結びの神社だ。",
@@ -61,6 +65,7 @@ const SCENARIOS = {
       },
       {
         name: "梅田スカイビル直下",
+        icon: "🏙️",
         query: "梅田スカイビル",
         sv: "🗺️ Street View案内：2棟のビルが上部でつながった、空中庭園のあるビル。直下の広場や植え込みのあたりが捜査ポイントだ。",
         fact: "梅田スカイビルは1993年完成。2棟の高層ビルを上部で連結した珍しい構造で、空中庭園展望台は地上173m。設計は建築家の原広司。",
@@ -125,6 +130,7 @@ const SCENARIOS = {
     spots: [
       {
         name: "花見小路通",
+        icon: "🏮",
         query: "花見小路 京都",
         sv: "🗺️ Street View案内：石畳の通りの両側に茶屋が並ぶ、祇園のメインストリート。有名な一力亭の前あたりに注目。",
         fact: "花見小路通は祇園の中心を南北に走る石畳の通り。江戸時代からの茶屋建築が残り、老舗の茶屋・一力亭（いちりきてい）で知られる。",
@@ -132,6 +138,7 @@ const SCENARIOS = {
       },
       {
         name: "祇園白川・巽橋",
+        icon: "🌉",
         query: "祇園白川 巽橋 京都",
         sv: "🗺️ Street View案内：柳の木と町家が川沿いに並ぶ一帯。小さな橋（巽橋）の欄干まわりをよく見てみよう。",
         fact: "祇園白川は、白川沿いに柳と町家が並ぶ情緒ある一帯。巽橋は写真撮影の名所で、ほとりには辰巳大明神が祀られている。",
@@ -139,6 +146,7 @@ const SCENARIOS = {
       },
       {
         name: "八坂神社",
+        icon: "⛩️",
         query: "八坂神社 京都",
         sv: "🗺️ Street View案内：四条通の突き当たり。朱い西楼門と石段が見えたら、そこが八坂神社だ。",
         fact: "八坂神社は祇園祭で知られる神社。もとは祇園社とも呼ばれ、全国の祇園神社の総本社。四条通に面した西楼門と石段が目印だ。",
@@ -146,6 +154,7 @@ const SCENARIOS = {
       },
       {
         name: "建仁寺",
+        icon: "🐉",
         query: "建仁寺 京都",
         sv: "🗺️ Street View案内：花見小路の南の端にある、静かな大寺院。門をくぐった先の受付が捜査ポイントだ。",
         fact: "建仁寺は1202年に栄西が開いた、京都で最も古い禅寺。俵屋宗達の『風神雷神図屏風』（原本は博物館で保管され、寺では精巧な複製を展示）や、天井画『双龍図』で知られる。",
@@ -153,6 +162,7 @@ const SCENARIOS = {
       },
       {
         name: "円山公園",
+        icon: "🌸",
         query: "円山公園 京都",
         sv: "🗺️ Street View案内：八坂神社の東側に広がる公園。有名な枝垂れ桜のあたりで聞き込みをしよう。",
         fact: "円山公園は1886年に開かれた、京都市で最も古い公園。一本の大きな枝垂れ桜は「祇園の夜桜」として知られる名物だ。",
@@ -217,6 +227,7 @@ const SCENARIOS = {
     spots: [
       {
         name: "雷門（風雷神門）",
+        icon: "🏮",
         query: "雷門 浅草",
         sv: "🗺️ Street View案内：浅草の玄関口。大きな赤い提灯が見えたら、その真下が捜査ポイントだ。",
         fact: "雷門の正式名称は風雷神門（ふうじんらいじんもん）。大提灯は高さ約3.9m、重さ約700kg。現在の提灯は1960年、パナソニックの創業者・松下幸之助の寄進によって復興したものだ。",
@@ -224,6 +235,7 @@ const SCENARIOS = {
       },
       {
         name: "仲見世通り",
+        icon: "🛍️",
         query: "仲見世通り 浅草",
         sv: "🗺️ Street View案内：雷門から寺へ続く、店がびっしり並ぶ通り。人形焼の店の前で聞き込みをしよう。",
         fact: "仲見世通りは雷門から宝蔵門まで約250m、およそ90店が並ぶ、日本で最も古い商店街のひとつ。人形焼や雷おこしが名物だ。",
@@ -231,6 +243,7 @@ const SCENARIOS = {
       },
       {
         name: "浅草寺・本堂",
+        icon: "🙏",
         query: "浅草寺 本堂",
         sv: "🗺️ Street View案内：仲見世を抜けた先の大きなお堂。お堂のわき、おみくじを結ぶ場所の近くが捜査ポイントだ。",
         fact: "浅草寺は、628年に隅田川で観音像が漁師の網にかかったという伝承から始まる、東京で最も古いお寺。観音様をまつる本堂は浅草の信仰の中心だ。",
@@ -238,6 +251,7 @@ const SCENARIOS = {
       },
       {
         name: "吾妻橋・隅田川",
+        icon: "🌉",
         query: "吾妻橋 浅草",
         sv: "🗺️ Street View案内：隅田川にかかる橋。対岸に見える金色のオブジェが目印。橋のたもとの船着き場で聞き込みをしよう。",
         fact: "吾妻橋のたもとには、アサヒビール本社の金色の「炎のオブジェ」（フラムドール）がある。隅田川は古くから、江戸の水運の大動脈だった。",
@@ -245,6 +259,7 @@ const SCENARIOS = {
       },
       {
         name: "浅草文化観光センター",
+        icon: "🗼",
         query: "浅草文化観光センター",
         sv: "🗺️ Street View案内：雷門の向かいにある、木組みのような外観の建物。屋上の展望テラスからは仲見世を見下ろせる。",
         fact: "浅草文化観光センターは、建築家・隈研吾の設計。屋上の展望テラスからは、仲見世通りと東京スカイツリーを一望できる。事件の準備室と入室記録はここにある。",
@@ -297,6 +312,7 @@ const state = {
   collected: new Set(), // 集めた手がかり（スポットの番号）
   currentSpot: -1,
   hintLevel: 0,
+  hintUsed: 0, // GMヒントの使用回数（探偵ランク判定用）
   selectedSuspect: -1,
   selectedTrick: -1,
   attempts: 0,
@@ -351,6 +367,7 @@ function startCase() {
   const sc = SCENARIOS[state.place];
   state.collected = new Set();
   state.hintLevel = 0;
+  state.hintUsed = 0;
   state.currentSpot = -1;
   state.selectedSuspect = -1;
   state.selectedTrick = -1;
@@ -386,7 +403,7 @@ function renderSpots() {
     const done = state.collected.has(i);
     btn.className = "spot-btn" + (done ? " done" : "") + (state.currentSpot === i ? " active" : "");
     btn.innerHTML =
-      "<span>" + (i + 1) + ". " + spot.name + "</span>" +
+      '<span class="spot-main"><span class="spot-icon">' + (spot.icon || "📍") + "</span><span>" + (i + 1) + ". " + spot.name + "</span></span>" +
       '<span class="spot-status">' + (done ? "✔ 手がかり入手" : "未捜査") + "</span>";
     btn.addEventListener("click", () => selectSpot(i));
     list.appendChild(btn);
@@ -403,31 +420,51 @@ function selectSpot(i) {
   $("spot-name").textContent = spot.name;
   $("spot-fact").textContent = "📍 " + spot.fact;
   const already = state.collected.has(i);
+  $("spot-analyzing").classList.add("hidden");
   $("spot-clue").classList.toggle("hidden", !already);
   if (already) $("spot-clue-text").textContent = spot.clue;
-  $("btn-collect").textContent = already ? "✔ 調査済み" : "ここを調べる（手がかりを集める）";
+  $("btn-collect").textContent = already ? "✔ 調査済み" : "🔍 現場検証する";
   $("btn-collect").disabled = already;
   $("spot-detail").classList.remove("hidden");
   renderSpots();
+  $("spot-detail").scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
+let collecting = false; // 現場検証の解析中フラグ（二重クリック防止）
 function collectClue() {
   const i = state.currentSpot;
-  if (i < 0 || state.collected.has(i)) return;
+  if (i < 0 || state.collected.has(i) || collecting) return;
+  collecting = true;
   const sc = SCENARIOS[state.place];
-  state.collected.add(i);
-  $("spot-clue-text").textContent = sc.spots[i].clue;
-  $("spot-clue").classList.remove("hidden");
-  $("btn-collect").textContent = "✔ 調査済み";
-  $("btn-collect").disabled = true;
-  renderSpots();
-  updateProgress();
-  if (state.collected.size === sc.spots.length) {
-    gmSay("すごい！ 手がかりが全部そろったね。あとは推理だ。下の「推理する」ボタンから進んでくれ。外してもペナルティはないから、自信を持って当ててみよう。");
-    $("btn-deduce").textContent = "推理する 🔍";
-  } else {
-    gmSay("手がかりを1つ手に入れた（" + state.collected.size + " / " + sc.spots.length + "）。残りのスポットもまわってみよう。");
-  }
+  const btn = $("btn-collect");
+  btn.disabled = true;
+  btn.textContent = "解析中…";
+  $("spot-clue").classList.add("hidden");
+  $("spot-analyzing").classList.remove("hidden");
+  setTimeout(() => {
+    collecting = false;
+    state.collected.add(i);
+    // 詳細パネルがそのままこのスポットを表示している場合だけ、手がかりを見せる
+    if (state.currentSpot === i) {
+      $("spot-analyzing").classList.add("hidden");
+      $("spot-clue-text").textContent = sc.spots[i].clue;
+      const clueBox = $("spot-clue");
+      clueBox.classList.remove("hidden");
+      clueBox.classList.remove("fade-in");
+      void clueBox.offsetWidth; // アニメーションを再発火させる
+      clueBox.classList.add("fade-in");
+      btn.textContent = "✔ 調査済み";
+      btn.disabled = true;
+    }
+    renderSpots();
+    updateProgress();
+    if (state.collected.size === sc.spots.length) {
+      gmSay("すごい！ 手がかりが全部そろったね。あとは推理だ。下の「推理する」ボタンから進んでくれ。外してもペナルティはないから、自信を持って当ててみよう。");
+      $("btn-deduce").textContent = "推理する 🔍";
+    } else {
+      gmSay("手がかりを1つ手に入れた（" + state.collected.size + " / " + sc.spots.length + "）。残りのスポットもまわってみよう。");
+    }
+  }, 900);
 }
 
 function updateProgress() {
@@ -473,15 +510,39 @@ function giveHint() {
   meSay("ヒントをください（Lv." + (state.hintLevel + 1) + "）");
   gmSay(sc.hints[state.hintLevel]);
   state.hintLevel++;
+  state.hintUsed++;
   updateHintButton();
 }
 
 /* ---------- 画面4: 推理 ---------- */
+function renderNotebook() {
+  const sc = SCENARIOS[state.place];
+  const items = [...state.collected].sort((a, b) => a - b);
+  $("notebook-summary").textContent =
+    "📋 捜査手帳（集めた手がかり " + items.length + "件）";
+  const list = $("notebook-list");
+  list.innerHTML = "";
+  items.forEach((i) => {
+    const spot = sc.spots[i];
+    const div = document.createElement("div");
+    div.className = "notebook-item";
+    const head = document.createElement("h4");
+    head.textContent = (spot.icon || "📍") + " " + spot.name;
+    const body = document.createElement("p");
+    body.textContent = spot.clue;
+    div.appendChild(head);
+    div.appendChild(body);
+    list.appendChild(div);
+  });
+  $("notebook").open = false;
+}
+
 function startDeduce() {
   const sc = SCENARIOS[state.place];
   state.selectedSuspect = -1;
   state.selectedTrick = -1;
   $("deduce-error").classList.add("hidden");
+  renderNotebook();
 
   const sl = $("suspect-list");
   sl.innerHTML = "";
@@ -550,6 +611,19 @@ function answer() {
 /* ---------- 画面5: 解決編 ---------- */
 function showResult() {
   const sc = SCENARIOS[state.place];
+
+  // 探偵ランク（GMヒントの使用回数で判定）
+  const used = state.hintUsed;
+  let rank, rankName;
+  if (used === 0) { rank = "S"; rankName = "名探偵"; }
+  else if (used <= 2) { rank = "A"; rankName = "腕利き探偵"; }
+  else if (used <= 4) { rank = "B"; rankName = "一人前探偵"; }
+  else { rank = "C"; rankName = "見習い探偵"; }
+  $("result-rank").innerHTML =
+    '<div class="rank-circle">' + rank + "</div>" +
+    '<div class="rank-label">探偵ランク ' + rank + " ― " + rankName + "</div>" +
+    '<div class="rank-sub">GMヒント使用 ' + used + " 回</div>";
+
   $("result-title").textContent = "『" + sc.title + "』解決！";
   $("result-truth").textContent = sc.truth;
   $("result-realstory").textContent = sc.realStory;
@@ -587,15 +661,20 @@ function init() {
     if (sharedTheme && THEMES.some((t) => t.id === sharedTheme)) {
       state.theme = sharedTheme;
     }
+    const sc = SCENARIOS[sharedCase];
     if (params.get("result") === "solved") {
-      const sc = SCENARIOS[sharedCase];
       $("share-banner-text").textContent =
         "🔗 友だちが「" + sc.place + "」の事件『" + sc.title + "』を解決しました！ あなたも同じ事件に挑戦してみよう。";
-      $("share-banner").classList.remove("hidden");
+    } else {
+      $("share-banner-text").textContent =
+        "🔗 シェアされた事件『" + sc.title + "』（" + sc.place + "）が届いています。";
     }
+    $("share-banner").classList.remove("hidden");
+    $("btn-share-challenge").classList.remove("hidden");
   }
 
   renderHome();
+  $("btn-share-challenge").addEventListener("click", startCase);
   $("btn-start").addEventListener("click", startCase);
   $("btn-investigate").addEventListener("click", startInvestigate);
   $("btn-collect").addEventListener("click", collectClue);
