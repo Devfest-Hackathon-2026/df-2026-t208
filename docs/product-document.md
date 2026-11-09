@@ -2,7 +2,7 @@
 
 チーム： みらいクラフト（受付番号 DF-2026-T208・大阪会場）
 カテゴリ： Entertainment（主）× Tourism（副）
-公開URL： （デプロイ後に記入）
+公開URL： https://nazomachi-world-2026.web.app
 GitHub： https://github.com/Devfest-Hackathon-2026/df-2026-t208
 
 ## 1. Why — 解決する課題

@@ -97,8 +97,8 @@ accessibility of travel), and explicit trade-off documentation (this file).
 - [ ] Demo video
 - [ ] Materials-use sheet (organizers' replaced sheet, 2026-11-07 version)
 - [ ] Presentation slides (on-site venue)
-- [ ] Public URL live on Google infrastructure (Firebase Hosting), kept up until Regional Day 2026-11-14
-- [ ] GitHub repository updated (this repo)
+- [x] Public URL live on Google infrastructure (Firebase Hosting, Spark plan): https://nazomachi-world-2026.web.app — kept up until Regional Day 2026-11-14
+- [x] GitHub repository updated (this repo)
 
 ## 8. Development process note
 
