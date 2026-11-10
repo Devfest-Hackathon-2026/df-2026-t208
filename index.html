@@ -4,11 +4,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>なぞまちワールド | NAZOMACHI WORLD</title>
-<meta name="description" content="場所を選ぶと、その場所でしか起きないミステリーが始まる。Street Viewの実写の街を歩いて捜査する探索ゲーム。">
+<meta name="description" content="行き先を入れるだけ、その街専用の謎解き事件が始まる。Google Mapsで実在の街を見ながら捜査する探索ゲーム。A mystery generated for any town you name — investigate with Google Maps.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600&family=BIZ+UDPGothic:wght@400;700&family=Zen+Kaku+Gothic+New:wght@700;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=4">
+<link rel="stylesheet" href="style.css?v=5">
 </head>
 <body data-screen="home">
 <div id="splash" role="presentation">
@@ -16,13 +16,14 @@
 <div class="splash-logo">なぞまち<span>ワールド</span></div>
 <div class="splash-sub">NAZOMACHI WORLD</div>
 <div class="splash-bar"><i></i></div>
-<div class="splash-text">捜査ファイルを開いています</div>
+<div class="splash-text" data-i18n="splashText">捜査ファイルを開いています</div>
 </div>
 </div>
 
 <header class="topbar">
 <div class="logo">なぞまち<span>ワールド</span></div>
-<div class="tagline">NAZOMACHI WORLD — 地球の全部が、事件現場になる。</div>
+<div class="tagline" data-i18n="tagline">NAZOMACHI WORLD — 地球の全部が、事件現場になる。</div>
+<div class="lang-switch"><button type="button" data-lang="ja">JP</button><button type="button" data-lang="en">EN</button></div>
 </header>
 
 <main id="app">
@@ -30,13 +31,13 @@
 <!-- 運行情報バー（事件名＋手がかり数） -->
 <div id="status-bar" class="status-bar hidden">
 <span class="status-case"><span class="status-no" id="status-no">事件</span><span id="status-title">—</span></span>
-<span class="status-clues">手がかり <b class="num" id="status-clue">0/5</b></span>
+<span class="status-clues"><span data-i18n="statusClues">手がかり</span> <b class="num" id="status-clue">0/5</b></span>
 </div>
 
 <!-- 共有リンクで来た人向けバナー -->
 <div id="share-banner" class="share-banner hidden">
 <span id="share-banner-text"></span>
-<button id="btn-share-challenge" class="btn-secondary hidden">この事件に挑戦する</button>
+<button id="btn-share-challenge" class="btn-secondary hidden" data-i18n="challengeBtn">この事件に挑戦する</button>
 </div>
 
 <!-- 画面1: ヒーロー（生成）＋棚＋もっと探す -->
@@ -45,81 +46,89 @@
 <img class="hero-bg" src="assets/hero-gion.webp" alt="">
 <div class="hero-shade"></div>
 <div class="hero-inner">
+<div class="lang-switch hero-lang"><button type="button" data-lang="ja">JP</button><button type="button" data-lang="en">EN</button></div>
 <div class="hero-logo">なぞまち<span>ワールド</span></div>
-<div class="hero-sub">地球の全部が、事件現場になる。</div>
-<p class="hero-copy">行き先を入れるだけ。<br>その街で、事件が起きる。</p>
+<div class="hero-sub" data-i18n="heroSub">地球の全部が、事件現場になる。</div>
+<p class="hero-copy" data-i18n="heroCopy">行き先を入れるだけ。<br>その街で、事件が起きる。</p>
 <div class="gen-pill">
-<input id="gen-input" type="text" placeholder="行き先の街（例：松山）" autocomplete="off" maxlength="24">
-<button id="btn-generate" type="button">事件を起こす</button>
+<input id="gen-input" type="text" placeholder="行き先の街（例：松山）" data-i18n-ph="genPlaceholder" autocomplete="off" maxlength="24">
+<button id="btn-generate" type="button" data-i18n="genButton">事件を起こす</button>
 </div>
 <div class="gen-examples">
-<span>たとえば</span>
+<span data-i18n="examplesLabel">たとえば</span>
 <button type="button" data-place="松山">松山</button>
 <button type="button" data-place="鎌倉">鎌倉</button>
 <button type="button" data-place="高知">高知</button>
 </div>
 <p id="gen-status" class="gen-status"></p>
-<button id="btn-hero-umeda" class="hero-sub-cta" type="button">まずは梅田の事件で遊ぶ →</button>
+<button id="btn-hero-umeda" class="hero-sub-cta pill" type="button" data-i18n="heroUmeda">まずは梅田の事件で遊ぶ →</button>
 <div class="hero-tech">Powered by Google Maps ・ Gemini ・ Firebase</div>
 </div>
 </div>
 
 <div class="steps-strip">
-<div class="step-cell"><span class="step-dot num">1</span><span>行き先を入れる</span></div>
-<div class="step-cell"><span class="step-dot num">2</span><span>事件が起きる</span></div>
-<div class="step-cell"><span class="step-dot num">3</span><span>歩いて解く</span></div>
+<div class="step-cell"><span class="step-dot num">1</span><span data-i18n="step1">行き先を入れる</span></div>
+<div class="step-cell"><span class="step-dot num">2</span><span data-i18n="step2">事件が起きる</span></div>
+<div class="step-cell"><span class="step-dot num">3</span><span data-i18n="step3">歩いて解く</span></div>
 </div>
 
+
+<div class="howto">
+<div class="howto-cell"><svg viewBox="0 0 120 74" class="howto-art" aria-hidden="true"><rect x="10" y="10" width="100" height="34" rx="3" fill="none" stroke="#1E2226" stroke-width="2.5"/><line x1="10" y1="27" x2="110" y2="27" stroke="#0A6EBD" stroke-width="5"/><circle cx="34" cy="27" r="6" fill="#fff" stroke="#1E2226" stroke-width="2.5"/><path d="M78 50c-6.5 0-11 4.8-11 10.4C67 68 78 74 78 74s11-6 11-13.6C89 54.8 84.5 50 78 50z" fill="#D6332B"/><circle cx="78" cy="60" r="3.4" fill="#fff"/></svg><p data-i18n="how1">街の名前を入れるだけ、その街専用の事件ファイルが生成される</p></div>
+<div class="howto-cell"><svg viewBox="0 0 120 74" class="howto-art" aria-hidden="true"><path d="M12 56 C40 56 44 18 72 18 L100 18" fill="none" stroke="#0B9A55" stroke-width="4"/><circle cx="12" cy="56" r="6" fill="#fff" stroke="#1E2226" stroke-width="2.5"/><circle cx="45" cy="35" r="6" fill="#fff" stroke="#1E2226" stroke-width="2.5"/><circle cx="104" cy="18" r="6" fill="#fff" stroke="#1E2226" stroke-width="2.5"/><rect x="76" y="42" width="36" height="25" rx="2" fill="#FFD400" stroke="#1E2226" stroke-width="2.5"/><line x1="83" y1="51" x2="105" y2="51" stroke="#1E2226" stroke-width="2.5"/><line x1="83" y1="59" x2="99" y2="59" stroke="#1E2226" stroke-width="2.5"/></svg><p data-i18n="how2">5つの現場を巡って手がかりを集める（地図は実在の街）</p></div>
+<div class="howto-cell"><svg viewBox="0 0 120 74" class="howto-art" aria-hidden="true"><rect x="8" y="12" width="52" height="18" rx="2" fill="none" stroke="#1E2226" stroke-width="2.5"/><path d="M15 21l5 5 8-9" fill="none" stroke="#0B9A55" stroke-width="3"/><rect x="8" y="38" width="52" height="18" rx="2" fill="none" stroke="#1E2226" stroke-width="2.5"/><circle cx="90" cy="37" r="19" fill="none" stroke="#D6332B" stroke-width="3"/><text x="90" y="46" text-anchor="middle" font-size="20" font-weight="700" fill="#D6332B" font-family="Barlow Condensed, sans-serif">S</text></svg><p data-i18n="how3">犯人とトリックを当てて、探偵ランクを競う（約10〜15分）</p></div>
+</div>
 <div id="discovery-main"></div>
 
-<h2 class="step-title"><span class="step-num num">探</span> もっと探す</h2>
+<h2 class="step-title" data-i18n="moreTitle"><span class="step-num num">探</span> もっと探す</h2>
 <div class="search-row">
-<input id="search-input" class="search-input" type="search" placeholder="資料検索：場所・事件名・キーワード" autocomplete="off">
-<button id="btn-shuffle" class="shuffle-btn" type="button">おまかせ捜査</button>
+<input id="search-input" class="search-input" type="search" placeholder="資料検索：場所・事件名・キーワード" data-i18n-ph="searchPlaceholder" autocomplete="off">
+<button id="btn-shuffle" class="shuffle-btn" type="button" data-i18n="shuffle">おまかせ捜査</button>
 </div>
-<p class="search-note">「おまかせ捜査」は、ファイルを1件ランダムに引き抜きます。</p>
+<p class="search-note" data-i18n="searchNote">「おまかせ捜査」は、ファイルを1件ランダムに引き抜きます。</p>
 <div id="axis-tabs" class="axis-tabs" role="tablist"></div>
 <div id="discovery-more"></div>
 
-<p class="note">※ 全事件とも、おうちモード（Street View風の地図で捜査）で遊べます。事件は生成エンジンが実在のスポットから組み立てるため、今後もファイルは増え続けます。</p>
+<p class="note" data-i18n="homeNote">※ 全事件とも、おうちモード（Google Mapsで実在の街を見ながら捜査）で遊べます。事件は生成エンジンが実在のスポットから組み立てるため、今後もファイルは増え続けます。</p>
 </section>
 
 <!-- 画面1.5: 事件ファイル詳細 -->
 <section id="screen-detail" class="screen hidden">
-<button id="btn-back-home" class="back-link" type="button">← ファイル一覧へ戻る</button>
+<button id="btn-back-home" class="back-link" type="button" data-i18n="backHome">← ファイル一覧へ戻る</button>
 <figure class="detail-photo">
 <img id="detail-photo" src="" alt="">
 <figcaption id="detail-photo-caption"></figcaption>
 </figure>
-<div id="detail-ribbon" class="gemini-ribbon hidden">シナリオ設計： Gemini</div>
+<div id="detail-ribbon" class="gemini-ribbon hidden" data-i18n="ribbonGemini">シナリオ設計： Gemini</div>
 <div class="detail-filed num"><span id="detail-fileno"></span> ／ <span id="detail-filed"></span></div>
 <div id="detail-place" class="detail-place"></div>
 <h1 id="detail-title"></h1>
 <p id="detail-desc" class="detail-desc"></p>
+<div id="detail-chips" class="detail-chips"></div>
 
-<h2 class="step-title"><span class="step-num num">1</span> 事件概要</h2>
+<h2 class="step-title" data-i18n="detailOverview"><span class="step-num num">1</span> 事件概要</h2>
 <dl id="detail-table" class="detail-table"></dl>
 
 <figure class="detail-map">
 <iframe id="detail-map" title="舞台の地図" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
-<figcaption>舞台は実在のスポット — Google Maps</figcaption>
+<figcaption data-i18n="detailMapCaption">舞台は実在のスポット — Google Maps</figcaption>
 </figure>
 
-<h2 class="step-title"><span class="step-num num">2</span> 捜査スポット <span id="detail-spot-count" class="spot-count"></span></h2>
+<h2 class="step-title"><span data-i18n="detailSpots"><span class="step-num num">2</span> 捜査スポット</span> <span id="detail-spot-count" class="spot-count"></span></h2>
 <ol id="detail-spots" class="detail-spots"></ol>
-<p class="note-left">手がかりの中身は、現場で「現場検証」するまで封印されています。</p>
+<p class="note-left" data-i18n="detailSpotsNote">手がかりの中身は、現場で「現場検証」するまで封印されています。</p>
 
-<h2 class="step-title"><span class="step-num num">3</span> 語り口を選ぶ</h2>
+<h2 class="step-title" data-i18n="detailThemes"><span class="step-num num">3</span> 語り口を選ぶ</h2>
 <div id="detail-themes" class="chip-row"></div>
-<p class="note-left">事件の導入文の語り口が変わります。事件の内容・真相は同じです。</p>
+<p class="note-left" data-i18n="detailThemesNote">事件の導入文の語り口が変わります。事件の内容・真相は同じです。</p>
 
-<button id="btn-detail-start" class="btn-primary">この事件の捜査をはじめる</button>
+<button id="btn-detail-start" class="btn-primary" data-i18n="detailStart">この事件の捜査をはじめる</button>
 </section>
 
 <!-- 画面2: 事件の導入 -->
 <section id="screen-case" class="screen hidden">
 <div class="case-head">
-<div class="case-file-label">事件ファイル — CASE FILE</div>
+<div class="case-file-label" data-i18n="caseFileLabel">事件ファイル — CASE FILE</div>
 <div id="case-place" class="case-place"></div>
 <h1 id="case-title"></h1>
 </div>
@@ -127,17 +136,17 @@
 <div class="gm-line">
 <div class="gm-avatar">GM</div>
 <div class="gm-bubble">
-<div class="gm-label">案内放送 — GAME MASTER</div>
+<div class="gm-label" data-i18n="gmLabel">案内放送 — GAME MASTER</div>
 <div id="case-gm"></div>
 </div>
 </div>
-<button id="btn-investigate" class="btn-primary">捜査をはじめる</button>
+<button id="btn-investigate" class="btn-primary" data-i18n="btnInvestigate">捜査をはじめる</button>
 </section>
 
 <!-- 画面3: 捜査 -->
 <section id="screen-investigate" class="screen hidden">
 <div class="progress-wrap">
-<div class="progress-label">手がかり <span id="clue-count">0</span> / 5</div>
+<div class="progress-label"><span data-i18n="progressClues">手がかり</span> <span id="clue-count">0</span> / 5</div>
 <div class="progress-bar"><div id="progress-fill"></div></div>
 </div>
 
@@ -336,13 +345,13 @@
 </div>
 
 <div class="map-legend">
-<span><i class="lg lg-todo"></i>未捜査</span>
-<span><i class="lg lg-active"></i>選択中</span>
-<span><i class="lg lg-done"></i>手がかり入手</span>
+<span><i class="lg lg-todo"></i><span data-i18n="legendTodo">未捜査</span></span>
+<span><i class="lg lg-active"></i><span data-i18n="legendActive">選択中</span></span>
+<span><i class="lg lg-done"></i><span data-i18n="legendDone">手がかり入手</span></span>
 </div>
 </div>
 
-<h2 class="step-title"><span class="step-num num">駅</span> 捜査スポット一覧</h2>
+<h2 class="step-title" data-i18n="spotListTitle"><span class="step-num num">駅</span> 捜査スポット一覧</h2>
 <div id="spot-list" class="spot-list"></div>
 
 <div id="spot-detail" class="spot-detail hidden">
@@ -355,86 +364,89 @@
 </div>
 <img id="spot-thumb" class="spot-thumb" alt="">
 <p id="spot-fact" class="spot-fact"></p>
-<div id="spot-analyzing" class="analyzing hidden">手がかりを解析中…</div>
+<div id="spot-analyzing" class="analyzing hidden" data-i18n="analyzing">手がかりを解析中…</div>
 <div id="spot-clue" class="clue-box hidden">
-<div class="clue-label">手がかり発見</div>
+<div class="clue-label" data-i18n="clueFound">手がかり発見</div>
 <p id="spot-clue-text"></p>
 </div>
-<button id="btn-collect" class="btn-secondary">現場検証する</button>
+<button id="btn-collect" class="btn-secondary" data-i18n="collectBtn">現場検証する</button>
 </div>
 
 <div class="map-real">
-<div class="map-real-label">実地図（資料） — GOOGLE MAPS</div>
+<div class="map-real-label" data-i18n="mapRealLabel">実地図（資料） — GOOGLE MAPS</div>
 <div class="map-wrap">
 <iframe id="map-frame" title="捜査マップ" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
 </div>
 <p id="sv-note" class="sv-note"></p>
+<button id="btn-map-toggle" class="btn-ghost map-toggle" type="button" data-i18n="mapToggleOn">地図を操作する</button>
 </div>
 
 <div class="gm-panel">
-<div class="gm-panel-title">案内放送<span class="gm-panel-sub">AI GAME MASTER</span></div>
+<div class="gm-panel-title" data-i18n="gmPanelTitle">案内放送<span class="gm-panel-sub">AI GAME MASTER</span></div>
 <div id="gm-chat" class="gm-chat"></div>
 <button id="btn-hint" class="btn-secondary">ヒントをもらう（Lv.1）</button>
 </div>
 
-<button id="btn-deduce" class="btn-primary" disabled>推理する（手がかりを全部集めると押せます）</button>
+<button id="btn-deduce" class="btn-primary" disabled data-i18n="deduceLocked">推理する（手がかりを全部集めると押せます）</button>
 </section>
 
 <!-- 画面4: 推理 -->
 <section id="screen-deduce" class="screen hidden">
-<h1>推理の時間</h1>
-<p class="lead">集めた手がかりをもとに、犯人とトリックを当ててください。外れても大丈夫。何度でも挑戦できます。</p>
+<h1 data-i18n="deduceTitle">推理の時間</h1>
+<p class="lead" data-i18n="deduceLead">集めた手がかりをもとに、犯人とトリックを当ててください。外れても大丈夫。何度でも挑戦できます。</p>
 
 <details id="notebook" class="notebook">
 <summary id="notebook-summary">捜査手帳（集めた手がかり 0件）</summary>
 <div id="notebook-list" class="notebook-list"></div>
 </details>
 
-<h2 class="step-title"><span class="step-num">Q1</span> 犯人は誰だ？</h2>
+<h2 class="step-title" data-i18n="q1"><span class="step-num">Q1</span> 犯人は誰だ？</h2>
 <div id="suspect-list" class="option-list"></div>
 
-<h2 class="step-title"><span class="step-num">Q2</span> トリックは何だ？</h2>
+<h2 class="step-title" data-i18n="q2"><span class="step-num">Q2</span> トリックは何だ？</h2>
 <div id="trick-list" class="option-list"></div>
 
 <div id="deduce-error" class="error-box hidden"></div>
-<button id="btn-answer" class="btn-primary btn-red">これで推理を告げる！</button>
-<button id="btn-back-investigate" class="btn-ghost">捜査に戻る</button>
+<button id="btn-answer" class="btn-primary btn-red" data-i18n="answerBtn">これで推理を告げる！</button>
+<button id="btn-back-investigate" class="btn-ghost" data-i18n="backInvestigate">捜査に戻る</button>
 </section>
 
 <!-- 画面5: 解決編 -->
 <section id="screen-result" class="screen hidden">
-<div class="solved-badge">事件解決</div>
+<div class="solved-badge" data-i18n="solvedBadge">事件解決</div>
 <div id="result-rank" class="rank-badge"></div>
 <h1 id="result-title"></h1>
 
-<h2 class="step-title"><span class="step-num num">1</span> 真相</h2>
-<div id="result-truth" class="notice-box"></div>
-
-<h2 class="step-title"><span class="step-num num">2</span> この街の「本当の話」</h2>
-<div id="result-realstory" class="notice-box"></div>
-
-<h2 class="step-title"><span class="step-num num">3</span> 結果をシェアする</h2>
-<p class="lead">同じ事件への挑戦リンクを友だちに送れます。</p>
+<h2 class="step-title" data-i18n="resultShare"><span class="step-num num">1</span> 結果をシェアする</h2>
+<p class="lead" data-i18n="shareLead">同じ事件への挑戦リンクを友だちに送れます。</p>
 <div class="share-row" id="share-row">
 <input id="share-url" type="text" readonly>
-<button id="btn-copy" class="btn-secondary">コピー</button>
+<button id="btn-copy" class="btn-secondary" data-i18n="copyBtn">コピー</button>
 </div>
-<p id="copy-done" class="copy-done hidden">コピーしました！</p>
-<p id="share-gen-note" class="note hidden">生成した事件は、この端末でのみ遊べます。シェアは監修済みの事件（梅田・祇園・浅草）で使えます。</p>
+<p id="copy-done" class="copy-done hidden" data-i18n="copied">コピーしました！</p>
+<p id="share-gen-note" class="note hidden" data-i18n="shareGenNote">生成した事件は、この端末でのみ遊べます。シェアは監修済みの事件（梅田・祇園・浅草）で使えます。</p>
 <p id="result-credits" class="result-credits"></p>
 
-<button id="btn-again" class="btn-primary">別の事件に挑戦する</button>
+<h2 class="step-title" data-i18n="resultTruth"><span class="step-num num">2</span> 真相</h2>
+<div id="result-truth" class="notice-box"></div>
+
+<h2 class="step-title" data-i18n="resultReal"><span class="step-num num">3</span> この街の「本当の話」</h2>
+<div id="result-realstory" class="notice-box"></div>
+
+
+<button id="btn-again" class="btn-primary" data-i18n="againBtn">別の事件に挑戦する</button>
 </section>
 
 </main>
 
 <footer class="footer">
-なぞまちワールド（NAZOMACHI WORLD）— DevFest GDGoC Japan Hackathon 2026 / チーム みらいクラフト（DF-2026-T208）<br>
+<span data-i18n="footer">なぞまちワールド（NAZOMACHI WORLD）— DevFest GDGoC Japan Hackathon 2026 / チーム みらいクラフト（DF-2026-T208）<br>
 Entertainment × Tourism<br>
-資料写真クレジット： 大阪・梅田 / phoenix_max（Wikimedia Commons, CC BY 3.0）ほか。詳細は提出資料の素材利用シートに記載。
+資料写真クレジット： 大阪・梅田 / phoenix_max（Wikimedia Commons, CC BY 3.0）ほか。詳細は提出資料の素材利用シートに記載。</span>
 </footer>
 
-<script>setTimeout(function(){var s=document.getElementById("splash"); if(s){s.classList.add("gone"); s.remove();}},1500); document.addEventListener("click",function(){var s=document.getElementById("splash"); if(s){s.classList.add("gone"); s.remove();}},{once:false});</script>
-<script src="app.js?v=4"></script>
+<script>(function(){var seen=false; try{seen=!!sessionStorage.getItem("nz-seen"); sessionStorage.setItem("nz-seen","1");}catch(e){} var s=document.getElementById("splash"); if(seen&&s){s.remove(); return;} setTimeout(function(){var x=document.getElementById("splash"); if(x){x.classList.add("gone"); x.remove();}},1500); document.addEventListener("click",function(){var x=document.getElementById("splash"); if(x){x.classList.add("gone"); x.remove();}});})();</script>
+<script src="i18n-data.js?v=1"></script>
+<script src="app.js?v=5"></script>
 </body>
 </html>

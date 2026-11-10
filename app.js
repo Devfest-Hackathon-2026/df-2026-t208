@@ -12,7 +12,19 @@ const THEMES = [
   { id: "horror", label: "ホラー風" },
 ];
 
-const SCENARIOS = {
+/* ---------- 多言語（日本語／英語） ---------- */
+let LANG = "ja";
+try { LANG = localStorage.getItem("nz-lang") || ((navigator.language || "ja").indexOf("en") === 0 ? "en" : "ja"); } catch (e) {}
+function t(key, vars) {
+  const dict = (typeof STR !== "undefined" && STR[LANG]) || {};
+  let s = dict[key] || (typeof STR !== "undefined" && STR.ja ? STR.ja[key] : undefined) || key;
+  if (vars) Object.keys(vars).forEach((k) => { s = s.split("{" + k + "}").join(String(vars[k])); });
+  return s;
+}
+function themeLabel(id) { const arr = LANG === "en" ? THEMES_EN : THEMES; const f = arr.find((x) => x.id === id); return f ? f.label : id; }
+function qTitle(title) { return LANG === "en" ? "\u201C" + title + "\u201D" : "『" + title + "』"; }
+
+const SCENARIOS_JA = {
   /* ============ 大阪・梅田（Gemini設計ループ Round 1 で生成されたシナリオを採用） ============ */
   umeda: {
     id: "umeda",
@@ -326,6 +338,31 @@ const SCENARIOS = {
   },
 };
 
+const SCENARIOS = {};
+function buildScenarios() {
+  Object.keys(SCENARIOS).forEach((k) => { delete SCENARIOS[k]; });
+  ["umeda", "gion", "asakusa"].forEach((id) => { SCENARIOS[id] = (LANG === "en" && typeof SCENARIOS_EN !== "undefined" && SCENARIOS_EN[id]) ? SCENARIOS_EN[id] : SCENARIOS_JA[id]; });
+  Object.keys(CASE_META).forEach((k) => { if (k.indexOf("gen-") === 0) delete CASE_META[k]; });
+  try { (JSON.parse(localStorage.getItem("nz-gen-places") || "[]")).forEach((p) => { try { generateCase(p); } catch (e) {} }); } catch (e) {}
+}
+function applyI18n() {
+  document.documentElement.lang = LANG === "en" ? "en" : "ja";
+  document.querySelectorAll("[data-i18n]").forEach((el) => { el.innerHTML = t(el.getAttribute("data-i18n")); });
+  document.querySelectorAll("[data-i18n-ph]").forEach((el) => { el.placeholder = t(el.getAttribute("data-i18n-ph")); });
+  document.querySelectorAll(".lang-switch button").forEach((b) => b.classList.toggle("active", b.getAttribute("data-lang") === LANG));
+}
+function setLang(l) {
+  if (l === LANG) return;
+  LANG = l;
+  try { localStorage.setItem("nz-lang", l); } catch (e) {}
+  state.place = null;
+  detailId = null;
+  buildScenarios();
+  applyI18n();
+  renderHome();
+  showScreen("home");
+}
+
 /* ================= アプリの状態とロジック ================= */
 const state = {
   place: null,        // 選択中の場所ID
@@ -573,12 +610,13 @@ function generateCase(rawPlace) {
   const place = rawPlace.trim().replace(/\s+/g, " ");
   const seed = fnvHash(place);
   const rnd = mulberry32(seed);
-  const kit = STORY_KITS[Math.floor(rnd() * STORY_KITS.length)];
+  const KITS = LANG === "en" ? STORY_KITS_EN : STORY_KITS;
+  const kit = KITS[Math.floor(rnd() * KITS.length)];
   const id = "gen-" + seed.toString(16);
   if (SCENARIOS[id]) return id;
 
   // スポットを5つ選ぶ（決定的シャッフル）
-  const pool = [...SPOT_TYPES];
+  const pool = [...(LANG === "en" ? SPOT_TYPES_EN : SPOT_TYPES)];
   for (let i = pool.length - 1; i > 0; i--) {
     const j = Math.floor(rnd() * (i + 1));
     [pool[i], pool[j]] = [pool[j], pool[i]];
@@ -587,7 +625,7 @@ function generateCase(rawPlace) {
   const color = GEN_COLORS[Math.floor(rnd() * GEN_COLORS.length)];
   const hero = GEN_HEROES[Math.floor(rnd() * GEN_HEROES.length)];
   const spots = chosen.map((t, i) => ({
-    name: place + "の" + t.label,
+    name: LANG === "en" ? place + " " + t.label : place + "の" + t.label,
     icon: t.icon,
     pin: GEN_COLORS[i % GEN_COLORS.length],
     query: place + " " + t.q,
@@ -596,7 +634,11 @@ function generateCase(rawPlace) {
     clue: kit.beats[i],
   }));
   const title = kit.title(place);
-  const intros = {
+  const intros = LANG === "en" ? {
+    detective: "A case has broken out in " + place + ". " + kit.item + " has vanished without a trace.\nThree people are involved. The stage is five spots across " + place + ". The traces are always somewhere.",
+    school: "On a trip to " + place + ", an SOS reaches the detective club: '" + kit.item + " has disappeared!'\nThree people are involved, and the stage is five spots across " + place + ". Solve it before free time ends!",
+    horror: "Dusk in " + place + ". " + kit.item + " vanished without a sound. Somewhere in the silent town, even now — no. This is human work. There is always a trace. Follow the five spots of " + place + ".",
+  } : {
     detective: place + "で事件が起きた。" + kit.item + "が、忽然と姿を消したのだ。\n関係者は3人。舞台は" + place + "の5つのスポット。痕跡は、必ずどこかに残っている。",
     school: "旅行で訪れた" + place + "。探偵部にSOSが届いた。『" + kit.item + "が消えちゃったんです！』\n関係者は3人、舞台は" + place + "の5つのスポット。自由時間のうちに、解決してみせる！",
     horror: place + "の夕暮れ。" + kit.item + "は、音もなく消えた。静まり返った街のどこかで、今も——いや、これは人間の仕業だ。必ず痕跡がある。" + place + "の5つのスポットを辿ろう。",
@@ -604,26 +646,26 @@ function generateCase(rawPlace) {
   SCENARIOS[id] = {
     id, emoji: "🧩", color, hero,
     place, title, desc: kit.desc(place), intros,
-    gmIntro: "ようこそ" + place + "へ、探偵くん。私はゲームマスターのGM。" + kit.item + "の行方を追うのが今回の事件だ。スポットで『現場検証』を押せば手がかりが手に入る。地図には実際の" + place + "の街が表示されるから、行った気分で捜査してくれ。",
+    gmIntro: LANG === "en" ? "Welcome to " + place + ", detective. I'm the Game Master, GM. This case is about tracking down " + kit.item + ". Press 'Investigate' at a spot to earn a clue. The map shows the real streets of " + place + ", so investigate as if you were walking there." : "ようこそ" + place + "へ、探偵くん。私はゲームマスターのGM。" + kit.item + "の行方を追うのが今回の事件だ。スポットで『現場検証』を押せば手がかりが手に入る。地図には実際の" + place + "の街が表示されるから、行った気分で捜査してくれ。",
     spots,
     suspects: kit.suspects,
     culprit: kit.culprit,
     tricks: kit.tricks,
     correctTrick: kit.correctTrick,
     truth: kit.truth(place, kit.suspects),
-    realStory: "この事件ファイルは、生成エンジンが『" + place + "』のために組み立てたオリジナルです。捜査画面の地図に映るのは、実際の" + place + "の街並み。スポットは実在の場所がそのまま事件の舞台になっています。\n事件を解いたら、ぜひ本物の" + place + "へ。事件で巡った場所が、そのまま旅の地図になるはずです。",
+    realStory: LANG === "en" ? "This case file was assembled by the generator for '" + place + "'. The map in the investigation screen shows the real streets of " + place + ", and its spots are real places turned into the stage of a case.\nOnce you've solved it, visit the real " + place + ". The places you investigated will become your travel map." : "この事件ファイルは、生成エンジンが『" + place + "』のために組み立てたオリジナルです。捜査画面の地図に映るのは、実際の" + place + "の街並み。スポットは実在の場所がそのまま事件の舞台になっています。\n事件を解いたら、ぜひ本物の" + place + "へ。事件で巡った場所が、そのまま旅の地図になるはずです。",
     hints: kit.hints,
   };
   CASE_META[id] = {
     fileNo: "NZ-GEN-" + (100 + (seed % 900)),
-    region: "生成",
+    region: LANG === "en" ? "Generated" : "生成",
     minutes: 10 + Math.floor(rnd() * 6),
     difficulty: 1 + Math.floor(rnd() * 3),
     solveRate: 40 + Math.floor(rnd() * 46),
-    tags: ["生成エンジン", kit.tag, "オーダーメイド"],
+    tags: LANG === "en" ? ["Generated", kit.tag, "Made to order"] : ["生成エンジン", kit.tag, "オーダーメイド"],
     photo: hero,
-    photoCaption: "キービジュアル：" + place + "の事件ファイル（生成エンジン選定）",
-    filed: "生成エンジンにより受理",
+    photoCaption: LANG === "en" ? "Key visual: the case file for " + place + " (chosen by the generator)" : "キービジュアル：" + place + "の事件ファイル（生成エンジン選定）",
+    filed: LANG === "en" ? "Filed by the case generator" : "生成エンジンにより受理",
   };
   try {
     const savedPlaces = JSON.parse(localStorage.getItem("nz-gen-places") || "[]");
@@ -639,14 +681,20 @@ function runGenerate() {
   const status = $("gen-status");
   const place = input.value.trim();
   if (!place) {
-    status.textContent = "行き先の街の名前を入力してください（例：京都、松山、あなたの地元でも）。";
+    status.textContent = t("genEmpty");
     input.focus();
     return;
   }
   generating = true;
   const btn = $("btn-generate");
   btn.disabled = true;
-  const steps = [
+  btn.textContent = LANG === "en" ? "Generating…" : "生成中…";
+  const steps = LANG === "en" ? [
+    "Checking real spots in \"" + place + "\" on Google Maps…",
+    "Placing the case's stage on the map…",
+    "Generating suspects and clues…",
+    "Finishing the case file…",
+  ] : [
     "Google Maps で「" + place + "」の実在スポットを確認中…",
     "事件の舞台を地図に配置中…",
     "容疑者と手がかりを生成中…",
@@ -661,7 +709,8 @@ function runGenerate() {
     const id = generateCase(place);
     generating = false;
     btn.disabled = false;
-    status.textContent = "『" + place + "』の事件ファイルが生成されました。";
+    btn.textContent = t("genButton");
+    status.textContent = t("genDone", { place: place });
     renderMainShelf();
     openDetail(id);
   }, 420);
@@ -688,11 +737,14 @@ let detailId = null;
 let homeWired = false;
 
 function metaFor(id) {
-  if (CASE_META[id]) return CASE_META[id];
-  if (id.indexOf("gen-") === 0) return { fileNo: "NZ-GEN-" + id.slice(4, 7).toUpperCase(), region: "生成", minutes: 12, difficulty: 2, solveRate: null, tags: ["生成事件"] };
+  if (CASE_META[id]) {
+    if (LANG === "en" && typeof CASE_META_EN !== "undefined" && CASE_META_EN[id]) return Object.assign({}, CASE_META[id], CASE_META_EN[id]);
+    return CASE_META[id];
+  }
+  if (id.indexOf("gen-") === 0) return { fileNo: "NZ-GEN-" + id.slice(4, 7).toUpperCase(), region: t("genMetaRegion"), minutes: 12, difficulty: 2, solveRate: null, tags: [t("genMetaTag")] };
   return null;
 }
-function diffName(m) { return DIFF_NAMES[m.difficulty] || "標準"; }
+function diffName(m) { const arr = LANG === "en" ? DIFF_NAMES_EN : DIFF_NAMES; return arr[m.difficulty] || arr[2]; }
 
 /* ---------- ポスターカード ---------- */
 function posterCardEl(sc) {
@@ -707,12 +759,12 @@ function posterCardEl(sc) {
   el.innerHTML =
     '<img src="' + sc.hero + '" alt="" loading="lazy">' +
     '<div class="poster-scrim"></div>' +
-    (isGen ? '<span class="poster-gen">生成</span>' : "") +
-    '<span class="stamp ' + (solved ? "stamp-solved" : (m.difficulty === 3 ? "stamp-hard" : "")) + '">' + (solved ? "解決済" : (m.difficulty === 3 ? "難事件" : "未解決")) + "</span>" +
+    (isGen ? '<span class="poster-gen">' + t("genBadge") + "</span>" : "") +
+    '<span class="stamp ' + (solved ? "stamp-solved" : (m.difficulty === 3 ? "stamp-hard" : "")) + '">' + (solved ? t("stampSolved") : (m.difficulty === 3 ? t("stampHard") : t("stampUnsolved"))) + "</span>" +
     '<span class="poster-body">' +
       '<span class="poster-place">' + sc.place + "</span>" +
-      '<span class="poster-title">『' + sc.title + "』</span>" +
-      '<span class="poster-meta num">約' + m.minutes + "分 ・ " + diffName(m) + "</span>" +
+      '<span class="poster-title">' + qTitle(sc.title) + "</span>" +
+      '<span class="poster-meta num">' + t("posterMeta", { m: m.minutes, d: diffName(m) }) + "</span>" +
     "</span>";
   el.addEventListener("click", () => openDetail(sc.id));
   return el;
@@ -724,10 +776,10 @@ function upcomingPosterEl(u) {
   el.innerHTML =
     '<img src="assets/key-visual.webp" alt="" loading="lazy" class="upcoming-img">' +
     '<div class="poster-scrim"></div>' +
-    '<span class="stamp stamp-pending">調査中</span>' +
+    '<span class="stamp stamp-pending">' + t("stampPending") + "</span>" +
     '<span class="poster-body">' +
       '<span class="poster-place">' + u.place + "</span>" +
-      '<span class="poster-title">事件ファイルを調査中</span>' +
+      '<span class="poster-title">' + t("upcomingTitle") + "</span>" +
       '<span class="poster-meta">' + u.note + "</span>" +
     "</span>";
   return el;
@@ -749,8 +801,8 @@ function renderMainShelf() {
   const box = $("discovery-main");
   if (!box) return;
   box.innerHTML = "";
-  box.appendChild(shelfRowEl("未解決ファイル", Object.values(SCENARIOS).map(posterCardEl)));
-  box.appendChild(shelfRowEl("調査中のファイル", UPCOMING.map(upcomingPosterEl)));
+  box.appendChild(shelfRowEl(t("shelfUnsolved"), Object.values(SCENARIOS).map(posterCardEl)));
+  box.appendChild(shelfRowEl(t("shelfUpcoming"), (LANG === "en" ? UPCOMING_EN : UPCOMING).map(upcomingPosterEl)));
 }
 
 /* ---------- もっと探す（軸タブ＋検索） ---------- */
@@ -776,34 +828,34 @@ function renderMore() {
     if (!hit.length) {
       const p = document.createElement("p");
       p.className = "note";
-      p.textContent = "「" + q + "」に該当する事件ファイルがありません。別のキーワードで探してみてください。";
+      p.textContent = t("searchNone", { q: q });
       box.appendChild(p);
     } else {
-      box.appendChild(shelfRowEl("「" + q + "」の検索結果（" + hit.length + "件）", hit.map(posterCardEl)));
+      box.appendChild(shelfRowEl(t("searchResultTitle", { q: q, n: hit.length }), hit.map(posterCardEl)));
     }
     return;
   }
   if (axis === "region") {
-    [["関西", "関西の事件"], ["関東", "関東の事件"], ["生成", "この端末で生成した事件"]].forEach(([r, label]) => {
+    (LANG === "en" ? [["Kansai", "Cases in Kansai"], ["Kanto", "Cases in Kanto"], ["Generated", t("genShelfRegion")]] : [["関西", "関西の事件"], ["関東", "関東の事件"], ["生成", "この端末で生成した事件"]]).forEach(([r, label]) => {
       const list = cases.filter(sc => { const m = metaFor(sc.id); return m && m.region === r; });
       if (list.length) box.appendChild(shelfRowEl(label, list.map(posterCardEl)));
     });
   } else if (axis === "time") {
-    [["10分で決着", c => metaFor(c.id).minutes <= 10], ["じっくり捜査（11分〜）", c => metaFor(c.id).minutes > 10]].forEach(([label, f]) => {
+    [[t("timeShelf1"), c => metaFor(c.id).minutes <= 10], [t("timeShelf2"), c => metaFor(c.id).minutes > 10]].forEach(([label, f]) => {
       const list = cases.filter(c => metaFor(c.id) && f(c));
       if (list.length) box.appendChild(shelfRowEl(label, list.map(posterCardEl)));
     });
   } else if (axis === "mood") {
     const tags = [];
     cases.forEach(c => { const m = metaFor(c.id); if (m) m.tags.forEach(t => { if (tags.indexOf(t) < 0) tags.push(t); }); });
-    tags.forEach(t => {
-      const list = cases.filter(c => { const m = metaFor(c.id); return m && m.tags.indexOf(t) >= 0; });
-      if (list.length) box.appendChild(shelfRowEl(t + "の事件", list.map(posterCardEl)));
+    tags.forEach((tag) => {
+      const list = cases.filter(c => { const m = metaFor(c.id); return m && m.tags.indexOf(tag) >= 0; });
+      if (list.length) box.appendChild(shelfRowEl(tag + t("moodSuffix"), list.map(posterCardEl)));
     });
   } else if (axis === "level") {
     [1, 2, 3].forEach(d => {
       const list = cases.filter(c => { const m = metaFor(c.id); return m && m.difficulty === d; });
-      if (list.length) box.appendChild(shelfRowEl(DIFF_NAMES[d], list.map(posterCardEl)));
+      if (list.length) box.appendChild(shelfRowEl((LANG === "en" ? DIFF_NAMES_EN : DIFF_NAMES)[d], list.map(posterCardEl)));
     });
   }
 }
@@ -811,7 +863,7 @@ function renderMore() {
 function renderAxisTabs() {
   const box = $("axis-tabs");
   box.innerHTML = "";
-  AXES.forEach(a => {
+  (LANG === "en" ? AXES_EN : AXES).forEach(a => {
     const b = document.createElement("button");
     b.type = "button";
     b.className = "axis-tab" + (axis === a.id ? " active" : "");
@@ -840,8 +892,8 @@ function renderHome() {
       const ids = Object.keys(SCENARIOS);
       const pick = ids[Math.floor(Math.random() * ids.length)];
       const btn = $("btn-shuffle");
-      btn.textContent = "ファイルを引き抜いています…";
-      setTimeout(() => { btn.textContent = "おまかせ捜査"; openDetail(pick); }, 650);
+      btn.textContent = t("shuffleBusy");
+      setTimeout(() => { btn.textContent = t("shuffle"); openDetail(pick); }, 650);
     });
     homeWired = true;
   }
@@ -855,38 +907,39 @@ function openDetail(id) {
   if (!SCENARIOS[id]) return;
   detailId = id;
   const sc = SCENARIOS[id];
-  const m = CASE_META[id];
+  const m = metaFor(id);
   $("detail-photo").src = m.photo;
-  $("detail-photo").alt = "資料写真：" + sc.place;
+  $("detail-photo").alt = t("detailAlt", { place: sc.place });
   $("detail-photo-caption").textContent = m.photoCaption;
   $("detail-fileno").textContent = m.fileNo;
   $("detail-filed").textContent = m.filed;
   $("detail-place").textContent = sc.place;
-  $("detail-title").textContent = "『" + sc.title + "』";
+  $("detail-title").textContent = qTitle(sc.title);
   $("detail-desc").textContent = sc.desc;
   const rows = [
-    ["発生場所", sc.place + "（" + m.region + "）"],
-    ["所要時間", "約" + m.minutes + "分"],
-    ["難易度", DIFF_LABEL[m.difficulty]],
-    ["手がかり", sc.spots.length + "件"],
-    ["容疑者", sc.suspects.length + "名"],
-    ["解決率", m.solveRate + "%"],
-    ["捜査方法", "おうちモード（Street View捜査）"],
+    [t("rowPlace"), sc.place + (LANG === "en" ? " (" + m.region + ")" : "（" + m.region + "）")],
+    [t("rowTime"), t("rowTimeVal", { m: m.minutes })],
+    [t("rowDiff"), diffName(m)],
+    [t("rowClues"), t("rowCluesVal", { n: sc.spots.length })],
+    [t("rowSuspects"), t("rowSuspectsVal", { n: sc.suspects.length })],
+    [t("rowRate"), m.solveRate + "%"],
+    [t("rowMethod"), t("rowMethodVal")],
   ];
   $("detail-table").innerHTML = rows.map((r) => "<div><dt>" + r[0] + "</dt><dd>" + r[1] + "</dd></div>").join("");
-  $("detail-spot-count").textContent = "（全" + sc.spots.length + "件）";
+  $("detail-spot-count").textContent = t("spotCountSuffix", { n: sc.spots.length });
   $("detail-ribbon").classList.toggle("hidden", id.indexOf("gen-") === 0);
   const mapQuery = id.indexOf("gen-") === 0 ? sc.place : sc.spots[0].query;
   $("detail-map").src = "https://maps.google.com/maps?q=" + encodeURIComponent(mapQuery) + "&z=14&output=embed";
-  $("detail-spots").innerHTML = sc.spots.map((s, i) => "<li><span class='num-kanji'>" + KANJI_NUM[i] + "</span>" + s.name + "</li>").join("");
+  $("detail-spots").innerHTML = sc.spots.map((s, i) => "<li><span class='num-kanji'>" + (LANG === "en" ? String(i + 1) : KANJI_NUM[i]) + "</span>" + s.name + "</li>").join("");
+  $("detail-chips").innerHTML = [t("posterMeta", { m: m.minutes, d: diffName(m) }), t("chipSpots", { n: sc.spots.length }), t("chipMode")].map((c) => '<span class="chip">' + c + "</span>").join("");
   const themes = $("detail-themes");
   themes.innerHTML = "";
-  THEMES.forEach((t) => {
+  THEMES.forEach((th) => {
     const b = document.createElement("button");
-    b.className = "theme-chip" + (state.theme === t.id ? " selected" : "");
-    b.textContent = t.label;
+    b.className = "theme-chip" + (state.theme === th.id ? " selected" : "");
+    b.textContent = themeLabel(th.id);
     b.addEventListener("click", () => {
-      state.theme = t.id;
+      state.theme = th.id;
       document.querySelectorAll("#detail-themes .theme-chip").forEach(c => c.classList.remove("selected"));
       b.classList.add("selected");
     });
@@ -908,10 +961,10 @@ function startCase() {
 
   const caseNo = Object.keys(SCENARIOS).indexOf(sc.id) + 1;
   $("case-place").textContent = "CASE " + String(caseNo).padStart(2, "0") + " — " + sc.place;
-  $("status-no").textContent = "第" + caseNo + "事件";
+  $("status-no").textContent = t("statusCaseN", { n: caseNo });
   $("status-title").textContent = sc.title;
   $("status-clue").textContent = "0/" + sc.spots.length;
-  $("case-title").textContent = "『" + sc.title + "』";
+  $("case-title").textContent = qTitle(sc.title);
   $("case-intro").textContent = sc.intros[state.theme] || sc.intros.detective;
   $("case-gm").textContent = sc.gmIntro;
   showScreen("case");
@@ -923,13 +976,11 @@ function startInvestigate() {
   renderSpots();
   renderRouteMap();
   $("gm-chat").innerHTML = "";
-  gmSay(sc.gmIntro);
+  gmSay(t("gmStart"));
   updateProgress();
   updateHintButton();
   $("spot-detail").classList.add("hidden");
-  $("sv-note").textContent = ["umeda", "gion", "asakusa"].includes(sc.id)
-    ? "まずは上の路線図か下の一覧でスポットを選んで、現場へ向かおう。"
-    : "下の一覧でスポットを選んで、現場へ向かおう。地図には実際の街が表示されます。";
+  $("sv-note").textContent = ["umeda", "gion", "asakusa"].includes(sc.id) ? t("svNoteFlagship") : t("svNoteGen");
   $("map-frame").removeAttribute("src");
   showScreen("investigate");
 }
@@ -943,8 +994,8 @@ function renderSpots() {
     const done = state.collected.has(i);
     btn.className = "spot-btn" + (done ? " done" : "") + (state.currentSpot === i ? " active" : "");
     btn.innerHTML =
-      '<span class="spot-main"><span class="spot-pin num" style="--pin:' + (spot.pin || "#0A6EBD") + '">' + (i + 1) + '</span><span class="spot-name-text">' + spot.name + "</span></span>" +
-      '<span class="spot-status">' + (done ? "✔ 手がかり入手" : "未捜査") + "</span>";
+      '<span class="spot-main"><span class="spot-pin num" style="--pin:' + (spot.pin || "#0A6EBD") + '">' + (i + 1) + '</span><span class="spot-name-text">' + (spot.icon ? spot.icon + " " : "") + spot.name + "</span></span>" +
+      '<span class="spot-status">' + (done ? t("spotDone") : t("spotTodo")) + "</span>";
     btn.addEventListener("click", () => selectSpot(i));
     list.appendChild(btn);
   });
@@ -973,6 +1024,8 @@ function selectSpot(i) {
   state.currentSpot = i;
   $("map-frame").src =
     "https://maps.google.com/maps?q=" + encodeURIComponent(spot.query) + "&z=17&output=embed";
+  $("map-frame").classList.remove("map-on");
+  $("btn-map-toggle").textContent = t("mapToggleOn");
   $("sv-note").textContent = spot.sv.replace(/^🗺️ /, "");
   $("spot-name").textContent = spot.name;
   $("spot-pinnum").textContent = i + 1;
@@ -980,13 +1033,13 @@ function selectSpot(i) {
   $("spot-detail").style.setProperty("--spot-color", spot.pin || "#0A6EBD");
   const thumb = $("spot-thumb");
   thumb.src = state.place === "umeda" ? "assets/spot-umeda-" + (i + 1) + ".webp" : sc.hero;
-  thumb.alt = spot.name + "の様子";
+  thumb.alt = t("spotAlt", { name: spot.name });
   $("spot-fact").textContent = spot.fact;
   const already = state.collected.has(i);
   $("spot-analyzing").classList.add("hidden");
   $("spot-clue").classList.toggle("hidden", !already);
   if (already) $("spot-clue-text").textContent = spot.clue;
-  $("btn-collect").textContent = already ? "✔ 調査済み" : "現場検証する";
+  $("btn-collect").textContent = already ? t("collectDone") : t("collectBtn");
   $("btn-collect").disabled = already;
   $("spot-detail").classList.remove("hidden");
   renderSpots();
@@ -1002,7 +1055,7 @@ function collectClue() {
   const sc = SCENARIOS[state.place];
   const btn = $("btn-collect");
   btn.disabled = true;
-  btn.textContent = "解析中…";
+  btn.textContent = t("collectBusy");
   $("spot-clue").classList.add("hidden");
   $("spot-analyzing").classList.remove("hidden");
   setTimeout(() => {
@@ -1017,17 +1070,17 @@ function collectClue() {
       clueBox.classList.remove("fade-in");
       void clueBox.offsetWidth; // アニメーションを再発火させる
       clueBox.classList.add("fade-in");
-      btn.textContent = "✔ 調査済み";
+      btn.textContent = t("collectDone");
       btn.disabled = true;
     }
     renderSpots();
     renderRouteMap();
     updateProgress();
     if (state.collected.size === sc.spots.length) {
-      gmSay("すごい！ 手がかりが全部そろったね。あとは推理だ。下の「推理する」ボタンから進んでくれ。外してもペナルティはないから、自信を持って当ててみよう。");
-      $("btn-deduce").textContent = "推理する";
+      gmSay(t("gmAllClues"));
+      $("btn-deduce").textContent = t("deduceReady");
     } else {
-      gmSay("手がかりを1つ手に入れた（" + state.collected.size + " / " + sc.spots.length + "）。残りのスポットもまわってみよう。");
+      gmSay(t("gmGotClue", { a: state.collected.size, b: sc.spots.length }));
     }
   }, 900);
 }
@@ -1040,7 +1093,7 @@ function updateProgress() {
   $("progress-fill").style.width = (n / sc.spots.length) * 100 + "%";
   const ready = n === sc.spots.length;
   $("btn-deduce").disabled = !ready;
-  if (!ready) $("btn-deduce").textContent = "推理する（手がかりを全部集めると押せます）";
+  if (!ready) $("btn-deduce").textContent = t("deduceLocked");
 }
 
 /* ---------- AIゲームマスター（ルールベースの段階ヒント） ---------- */
@@ -1063,17 +1116,17 @@ function meSay(text) {
 function updateHintButton() {
   const btn = $("btn-hint");
   if (state.hintLevel >= 3) {
-    btn.textContent = "ヒントはここまで（あとは君の推理だ！）";
+    btn.textContent = t("hintMax");
     btn.disabled = true;
   } else {
-    btn.textContent = "ヒントをもらう（Lv." + (state.hintLevel + 1) + " / 3）";
+    btn.textContent = t("hintNext", { n: state.hintLevel + 1 });
     btn.disabled = false;
   }
 }
 function giveHint() {
   const sc = SCENARIOS[state.place];
   if (state.hintLevel >= 3) return;
-  meSay("ヒントをください（Lv." + (state.hintLevel + 1) + "）");
+  meSay(t("hintAsk", { n: state.hintLevel + 1 }));
   gmSay(sc.hints[state.hintLevel]);
   state.hintLevel++;
   state.hintUsed++;
@@ -1084,8 +1137,7 @@ function giveHint() {
 function renderNotebook() {
   const sc = SCENARIOS[state.place];
   const items = [...state.collected].sort((a, b) => a - b);
-  $("notebook-summary").textContent =
-    "捜査手帳（集めた手がかり " + items.length + "件）";
+  $("notebook-summary").textContent = t("notebookSummary", { n: items.length });
   const list = $("notebook-list");
   list.innerHTML = "";
   items.forEach((i) => {
@@ -1105,7 +1157,7 @@ function renderNotebook() {
     div.appendChild(body);
     list.appendChild(div);
   });
-  $("notebook").open = false;
+  $("notebook").open = true;
 }
 
 function startDeduce() {
@@ -1155,7 +1207,7 @@ function answer() {
   const sc = SCENARIOS[state.place];
   const err = $("deduce-error");
   if (state.selectedSuspect < 0 || state.selectedTrick < 0) {
-    err.textContent = "Q1（犯人）とQ2（トリック）の両方を選んでから、推理を告げてください。";
+    err.textContent = t("errBoth");
     err.classList.remove("hidden");
     return;
   }
@@ -1166,15 +1218,15 @@ function answer() {
     showResult();
     return;
   }
-  let msg = "GM：惜しい！ その推理には、手がかりと合わない点がある。\n";
+  let msg = t("errHead");
   if (!culpritOk && !trickOk) {
-    msg += "犯人もトリックも、もう一度手がかりと照らし合わせてみよう。捜査に戻って手がかりを読み直すのも有効だ。";
+    msg += t("errBothWrong");
   } else if (!culpritOk) {
-    msg += "トリックの見立ては筋が通っている。でも、そのトリックを実行できた人物は誰だろう？ アリバイと「できたかどうか」を比べ直してみて。";
+    msg += t("errCulpritWrong");
   } else {
-    msg += "犯人の目星は正しい方向だ。あとは、その人物が「どうやって」やったか。手がかりが指す手段と結びつけてみよう。";
+    msg += t("errTrickWrong");
   }
-  msg += "\n（挑戦 " + state.attempts + " 回目 / 何度でも挑戦できます）";
+  msg += t("errAttempts", { n: state.attempts });
   err.textContent = msg;
   err.classList.remove("hidden");
 }
@@ -1186,16 +1238,17 @@ function showResult() {
   // 探偵ランク（GMヒントの使用回数で判定）
   const used = state.hintUsed;
   let rank, rankName;
-  if (used === 0) { rank = "S"; rankName = "名探偵"; }
-  else if (used === 1) { rank = "A"; rankName = "腕利き探偵"; }
-  else if (used === 2) { rank = "B"; rankName = "一人前探偵"; }
-  else { rank = "C"; rankName = "見習い探偵"; }
+  if (used === 0) { rank = "S"; }
+  else if (used === 1) { rank = "A"; }
+  else if (used === 2) { rank = "B"; }
+  else { rank = "C"; }
+  rankName = t("rank" + rank);
   $("result-rank").innerHTML =
     '<div class="rank-circle">' + rank + "</div>" +
-    '<div class="rank-label">探偵ランク ' + rank + " ― " + rankName + "</div>" +
-    '<div class="rank-sub">GMヒント使用 ' + used + " 回</div>";
+    '<div class="rank-label">' + t("rankLabel", { r: rank, name: rankName }) + "</div>" +
+    '<div class="rank-sub">' + t("rankSub", { n: used }) + "</div>";
 
-  $("result-title").textContent = "『" + sc.title + "』解決！";
+  $("result-title").textContent = t("resultTitleFmt", { title: sc.title });
   $("result-truth").textContent = sc.truth;
   $("result-realstory").textContent = sc.realStory;
 
@@ -1213,15 +1266,18 @@ function showResult() {
   const isGenCase = sc.id.indexOf("gen-") === 0;
   $("share-row").classList.toggle("hidden", isGenCase);
   $("share-gen-note").classList.toggle("hidden", !isGenCase);
-  $("result-credits").textContent = isGenCase
-    ? "事件生成： なぞまち生成エンジン ／ 地図： Google Maps ／ 公開： Firebase Hosting"
-    : "事件設計： Gemini ／ 地図： Google Maps ／ 公開： Firebase Hosting";
+  $("result-credits").textContent = isGenCase ? t("creditsGen") : t("creditsFlagship");
+  $("btn-copy").textContent = (typeof navigator !== "undefined" && navigator.share) ? t("shareBtn") : t("copyBtn");
   $("copy-done").classList.add("hidden");
   showScreen("result");
 }
 
 async function copyShareUrl() {
   const input = $("share-url");
+  if (typeof navigator !== "undefined" && navigator.share) {
+    try { await navigator.share({ title: document.title, url: input.value }); } catch (e) {}
+    return;
+  }
   try {
     await navigator.clipboard.writeText(input.value);
   } catch (e) {
@@ -1233,6 +1289,8 @@ async function copyShareUrl() {
 
 /* ---------- 起動処理 ---------- */
 function init() {
+  buildScenarios();
+  applyI18n();
   // 共有リンクのパラメータ
   const params = new URLSearchParams(location.search);
   const sharedCase = params.get("case");
@@ -1244,11 +1302,9 @@ function init() {
     }
     const sc = SCENARIOS[sharedCase];
     if (params.get("result") === "solved") {
-      $("share-banner-text").textContent =
-        "友だちが「" + sc.place + "」の事件『" + sc.title + "』を解決しました！ あなたも同じ事件に挑戦してみよう。";
+      $("share-banner-text").textContent = t("shareSolved", { place: sc.place, title: sc.title });
     } else {
-      $("share-banner-text").textContent =
-        "シェアされた事件『" + sc.title + "』（" + sc.place + "）が届いています。";
+      $("share-banner-text").textContent = t("shareCase", { place: sc.place, title: sc.title });
     }
     $("share-banner").classList.remove("hidden");
     $("btn-share-challenge").classList.remove("hidden");
@@ -1267,15 +1323,21 @@ function init() {
     });
   });
 
-  try {
-    (JSON.parse(localStorage.getItem("nz-gen-places") || "[]")).forEach((p) => { try { generateCase(p); } catch (e) {} });
-  } catch (e) {}
   renderHome();
+  document.querySelectorAll(".lang-switch button").forEach((b) => {
+    b.addEventListener("click", () => setLang(b.getAttribute("data-lang")));
+  });
+  applyI18n();
+  if (sharedCase && SCENARIOS[sharedCase]) openDetail(sharedCase);
   $("btn-share-challenge").addEventListener("click", () => openDetail(state.place));
   $("btn-back-home").addEventListener("click", () => { renderHome(); showScreen("home"); });
   $("btn-detail-start").addEventListener("click", () => { state.place = detailId; startCase(); });
   $("btn-investigate").addEventListener("click", startInvestigate);
   $("btn-collect").addEventListener("click", collectClue);
+  $("btn-map-toggle").addEventListener("click", () => {
+    const on = $("map-frame").classList.toggle("map-on");
+    $("btn-map-toggle").textContent = on ? t("mapToggleOff") : t("mapToggleOn");
+  });
   $("btn-hint").addEventListener("click", giveHint);
   $("btn-deduce").addEventListener("click", startDeduce);
   $("btn-back-investigate").addEventListener("click", () => showScreen("investigate"));

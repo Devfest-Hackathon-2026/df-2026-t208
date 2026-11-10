@@ -916,8 +916,8 @@ h1 {
 .hero-shade { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(10,14,18,.6) 0%, rgba(10,14,18,.3) 42%, rgba(10,14,18,.93) 100%); }
 .hero-inner { position: relative; padding: 24px 20px 20px; color: #fff; }
 .hero-logo { font-family: var(--font-head); font-weight: 900; font-size: 2.5rem; line-height: 1.05; letter-spacing: .02em; text-shadow: 0 2px 14px rgba(0,0,0,.45); }
-.hero-logo span { color: #FFD23F; }
-.hero-sub { font-family: var(--font-head); font-weight: 700; font-size: .92rem; letter-spacing: .14em; color: #FFD23F; margin-top: 6px; text-shadow: 0 1px 8px rgba(0,0,0,.5); }
+.hero-logo span { color: var(--yellow); }
+.hero-sub { font-family: var(--font-head); font-weight: 700; font-size: .92rem; letter-spacing: .14em; color: var(--yellow); margin-top: 6px; text-shadow: 0 1px 8px rgba(0,0,0,.5); }
 .hero-copy { font-family: var(--font-head); font-weight: 700; font-size: 1.28rem; line-height: 1.55; margin: 14px 0 16px; text-shadow: 0 2px 10px rgba(0,0,0,.5); }
 .gen-pill { display: flex; align-items: center; background: #fff; border-radius: 999px; padding: 5px; box-shadow: 0 10px 28px rgba(0,0,0,.4); }
 .gen-pill input { flex: 1; min-width: 0; border: none; background: transparent; font: inherit; font-size: 1.02rem; padding: 10px 14px; color: var(--ink); }
@@ -927,7 +927,7 @@ h1 {
 .gen-examples { display: flex; align-items: center; gap: 8px; margin-top: 12px; font-size: .85rem; color: rgba(255,255,255,.85); }
 .gen-examples button { background: rgba(255,255,255,.14); color: #fff; border: 1.5px solid rgba(255,255,255,.65); border-radius: 999px; padding: 5px 14px; font: inherit; font-size: .85rem; cursor: pointer; }
 .hero .gen-status { min-height: 1.4em; margin: 10px 2px 0; font-size: .88rem; color: #FFE9A8; }
-.hero-sub-cta { display: inline-block; margin-top: 12px; background: none; border: none; border-bottom: 2px solid #FFD23F; color: #fff; font: inherit; font-weight: 700; font-size: .95rem; padding: 2px 0; cursor: pointer; }
+.hero-sub-cta { display: inline-block; margin-top: 12px; background: none; border: none; border-bottom: 2px solid var(--yellow); color: #fff; font: inherit; font-weight: 700; font-size: .95rem; padding: 2px 0; cursor: pointer; }
 .hero-tech { margin-top: 16px; font-size: .72rem; letter-spacing: .08em; color: rgba(255,255,255,.72); }
 .steps-strip { position: relative; display: flex; margin: 2px 0 20px; padding: 0 4px; }
 .steps-strip::before { content: ""; position: absolute; top: 13px; left: 18%; right: 18%; height: 3px; background: var(--ink); border-radius: 2px; }
@@ -942,7 +942,7 @@ h1 {
 .poster-card .stamp { top: 10px; right: 10px; font-size: .78rem; }
 .poster-gen { position: absolute; top: 10px; left: 10px; background: var(--yellow); color: var(--ink); font-family: var(--font-head); font-weight: 900; font-size: .72rem; padding: 3px 9px; border-radius: 999px; border: 1.5px solid var(--ink); }
 .poster-body { position: absolute; left: 0; right: 0; bottom: 0; padding: 12px 13px 13px; display: flex; flex-direction: column; gap: 3px; }
-.poster-place { font-size: .78rem; font-weight: 700; letter-spacing: .12em; color: #FFD23F; }
+.poster-place { font-size: .78rem; font-weight: 700; letter-spacing: .12em; color: var(--yellow); }
 .poster-title { font-family: var(--font-head); font-weight: 900; font-size: 1.02rem; line-height: 1.35; }
 .poster-meta { font-size: .76rem; color: rgba(255,255,255,.85); line-height: 1.45; }
 .upcoming-card { cursor: default; }
@@ -963,3 +963,36 @@ body[data-screen="home"] .hero { margin-top: 0; }
 /* v4.2: 解決済スタンプと調査中ティザー */
 .stamp-solved { background: var(--green); color: #fff; }
 .upcoming-img { filter: brightness(.45) saturate(.6); }
+
+/* ===== v5: 言語切替・遊び方図解・チップ・sticky・手応え ===== */
+.lang-switch { display: inline-flex; border: 2px solid var(--ink); border-radius: 999px; overflow: hidden; background: #fff; }
+.lang-switch button { border: none; background: #fff; color: var(--ink); font-family: var(--font-num); font-weight: 600; font-size: .78rem; letter-spacing: .08em; padding: 5px 12px; cursor: pointer; min-height: 32px; }
+.lang-switch button.active { background: var(--ink); color: #fff; }
+.topbar { position: relative; }
+.topbar .lang-switch { position: absolute; right: 14px; top: 50%; transform: translateY(-50%); }
+.hero-lang { position: absolute; top: 14px; right: 14px; z-index: 6; border-color: rgba(255,255,255,.85); box-shadow: 0 2px 10px rgba(0,0,0,.35); }
+.hero-sub-cta.pill { background: rgba(10,14,18,.55); border: 2px solid var(--yellow); border-radius: 999px; padding: 10px 20px; min-height: 44px; backdrop-filter: blur(2px); }
+.hero:focus-within .hero-bg { animation-play-state: paused; }
+.howto { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 18px 0 4px; }
+.howto-cell { border: 2px solid var(--ink); border-radius: 4px; background: #fff; padding: 10px 8px 8px; text-align: center; }
+.howto-art { width: 100%; height: 54px; }
+.howto-cell p { font-size: .72rem; line-height: 1.5; font-weight: 700; margin-top: 6px; }
+.detail-chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0 4px; }
+.detail-chips .chip { border: 2px solid var(--ink); border-radius: 999px; padding: 5px 12px; font-size: .8rem; font-weight: 700; background: var(--paper); }
+#btn-detail-start { position: sticky; bottom: 12px; z-index: 20; box-shadow: 0 6px 18px rgba(20,24,28,.28); }
+#screen-investigate .progress-wrap { position: sticky; top: 0; z-index: 15; background: var(--paper); padding-top: 8px; }
+#btn-deduce { position: sticky; bottom: 12px; z-index: 20; box-shadow: 0 6px 18px rgba(20,24,28,.28); }
+.btn-primary, .btn-secondary, .btn-ghost, .shuffle-btn { transition: transform .08s ease, box-shadow .15s ease, background .15s ease; }
+.btn-primary:active, .btn-secondary:active, .shuffle-btn:active { transform: scale(.98); }
+.btn-primary:focus-visible, .btn-secondary:focus-visible, .axis-tab:focus-visible, .theme-chip:focus-visible, .poster-card:focus-visible { outline: 3px solid var(--blue); outline-offset: 2px; }
+.gen-pill input, .search-input { font-size: 16px; }
+.axis-tab, .back-link { min-height: 40px; }
+.gen-examples button { min-height: 36px; padding: 6px 14px; }
+.poster-title { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.hero-logo { font-size: clamp(1.9rem, 10vw, 2.6rem); }
+.poster-row { -webkit-mask-image: linear-gradient(90deg, #000 92%, transparent); mask-image: linear-gradient(90deg, #000 92%, transparent); }
+.map-wrap { background: #E7ECE4; }
+#detail-map { pointer-events: none; }
+.map-real #map-frame { pointer-events: none; }
+.map-real #map-frame.map-on { pointer-events: auto; }
+.map-toggle { margin-top: 8px; min-height: 40px; }
