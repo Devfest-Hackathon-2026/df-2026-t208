@@ -965,6 +965,7 @@ function startCase() {
   $("status-title").textContent = sc.title;
   $("status-clue").textContent = "0/" + sc.spots.length;
   $("case-title").textContent = qTitle(sc.title);
+  $("case-hero").src = sc.hero;
   $("case-intro").textContent = sc.intros[state.theme] || sc.intros.detective;
   $("case-gm").textContent = sc.gmIntro;
   showScreen("case");

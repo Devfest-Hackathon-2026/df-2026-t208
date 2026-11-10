@@ -8,12 +8,13 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600&family=BIZ+UDPGothic:wght@400;700&family=Zen+Kaku+Gothic+New:wght@700;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=5">
+<link rel="stylesheet" href="style.css?v=6">
 </head>
 <body data-screen="home">
 <div id="splash" role="presentation">
 <div class="splash-sign">
 <div class="splash-logo">なぞまち<span>ワールド</span></div>
+<img class="splash-chibi" src="assets/gm-chibi.webp" alt="">
 <div class="splash-sub">NAZOMACHI WORLD</div>
 <div class="splash-bar"><i></i></div>
 <div class="splash-text" data-i18n="splashText">捜査ファイルを開いています</div>
@@ -131,10 +132,11 @@
 <div class="case-file-label" data-i18n="caseFileLabel">事件ファイル — CASE FILE</div>
 <div id="case-place" class="case-place"></div>
 <h1 id="case-title"></h1>
+<img id="case-hero" class="case-hero" alt="">
 </div>
 <div id="case-intro" class="intro-box"></div>
 <div class="gm-line">
-<div class="gm-avatar">GM</div>
+<img class="gm-avatar" src="assets/gm-chibi.webp" alt="GM">
 <div class="gm-bubble">
 <div class="gm-label" data-i18n="gmLabel">案内放送 — GAME MASTER</div>
 <div id="case-gm"></div>
@@ -394,6 +396,7 @@
 <section id="screen-deduce" class="screen hidden">
 <h1 data-i18n="deduceTitle">推理の時間</h1>
 <p class="lead" data-i18n="deduceLead">集めた手がかりをもとに、犯人とトリックを当ててください。外れても大丈夫。何度でも挑戦できます。</p>
+<img class="deduce-mascot" src="assets/gm-chibi-think.webp" alt="">
 
 <details id="notebook" class="notebook">
 <summary id="notebook-summary">捜査手帳（集めた手がかり 0件）</summary>
@@ -447,6 +450,6 @@ Entertainment × Tourism<br>
 
 <script>(function(){var seen=false; try{seen=!!sessionStorage.getItem("nz-seen"); sessionStorage.setItem("nz-seen","1");}catch(e){} var s=document.getElementById("splash"); if(seen&&s){s.remove(); return;} setTimeout(function(){var x=document.getElementById("splash"); if(x){x.classList.add("gone"); x.remove();}},1500); document.addEventListener("click",function(){var x=document.getElementById("splash"); if(x){x.classList.add("gone"); x.remove();}});})();</script>
 <script src="i18n-data.js?v=1"></script>
-<script src="app.js?v=5"></script>
+<script src="app.js?v=6"></script>
 </body>
 </html>
