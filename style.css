@@ -914,7 +914,7 @@ h1 {
 .hero-bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; animation: kenburns 16s ease-in-out infinite alternate; }
 @keyframes kenburns { from { transform: scale(1); } to { transform: scale(1.09); } }
 .hero-shade { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(10,14,18,.6) 0%, rgba(10,14,18,.3) 42%, rgba(10,14,18,.93) 100%); }
-.hero-inner { position: relative; padding: 24px 20px 20px; color: #fff; }
+.hero-inner { position: relative; padding: 60px 20px 20px; color: #fff; }
 .hero-logo { font-family: var(--font-head); font-weight: 900; font-size: 2.5rem; line-height: 1.05; letter-spacing: .02em; text-shadow: 0 2px 14px rgba(0,0,0,.45); }
 .hero-logo span { color: var(--yellow); }
 .hero-sub { font-family: var(--font-head); font-weight: 700; font-size: .92rem; letter-spacing: .14em; color: var(--yellow); margin-top: 6px; text-shadow: 0 1px 8px rgba(0,0,0,.5); }
@@ -989,7 +989,7 @@ body[data-screen="home"] .hero { margin-top: 0; }
 .axis-tab, .back-link { min-height: 40px; }
 .gen-examples button { min-height: 36px; padding: 6px 14px; }
 .poster-title { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
-.hero-logo { font-size: clamp(1.9rem, 10vw, 2.6rem); }
+.hero-logo { font-size: clamp(1.8rem, 9vw, 2.5rem); white-space: nowrap; }
 .poster-row { -webkit-mask-image: linear-gradient(90deg, #000 92%, transparent); mask-image: linear-gradient(90deg, #000 92%, transparent); }
 .map-wrap { background: #E7ECE4; }
 #detail-map { pointer-events: none; }
