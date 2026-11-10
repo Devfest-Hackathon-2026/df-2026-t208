@@ -850,3 +850,62 @@ h1 {
   .card-grid-files { grid-template-columns: 1fr; }
   .shelf-scroll .file-card { flex-basis: 230px; }
 }
+
+/* ---------- オープニング（スプラッシュ） ---------- */
+#splash {
+  position: fixed; inset: 0; z-index: 100;
+  background: var(--ink);
+  display: flex; align-items: center; justify-content: center;
+  animation: splash-out .45s ease 1.35s forwards;
+}
+#splash.gone { display: none; }
+.splash-sign {
+  background: var(--paper); border-radius: 4px;
+  padding: 26px 38px 20px; text-align: center;
+  border-top: 10px solid var(--blue);
+  animation: splash-in .5s cubic-bezier(.2,.9,.3,1.2) both;
+  max-width: 84vw;
+}
+.splash-logo { font-family: var(--font-head); font-weight: 900; font-size: 1.7rem; letter-spacing: .04em; }
+.splash-logo span { color: var(--blue); }
+.splash-sub { color: var(--ink-dim); font-size: .68rem; font-weight: 700; letter-spacing: .22em; margin-top: 2px; }
+.splash-bar {
+  height: 6px; background: var(--line); border-radius: 3px;
+  margin: 16px auto 10px; overflow: hidden; width: 210px; max-width: 60vw;
+}
+.splash-bar i {
+  display: block; height: 100%; width: 0; background: var(--red);
+  animation: splash-fill 1.05s ease .15s forwards;
+}
+.splash-text { color: var(--ink-dim); font-size: .78rem; font-weight: 700; }
+@keyframes splash-in { from { transform: translateY(26px); opacity: 0; } to { transform: none; opacity: 1; } }
+@keyframes splash-fill { to { width: 100%; } }
+@keyframes splash-out { to { opacity: 0; visibility: hidden; } }
+@media (prefers-reduced-motion: reduce) {
+  #splash { animation-duration: .01s; animation-delay: .01s; }
+  .splash-sign, .splash-bar i { animation-duration: .01s; }
+}
+
+/* ---------- 事件生成パネル ---------- */
+.gen-panel {
+  background: var(--paper); border: 2px solid var(--ink); border-radius: 4px;
+  padding: 16px 16px 14px; margin-top: 18px;
+  box-shadow: 5px 5px 0 var(--ink);
+}
+.gen-label { color: var(--red); font-size: .82rem; font-weight: 600; letter-spacing: .1em; }
+.gen-title { font-family: var(--font-head); font-weight: 900; font-size: 1.3rem; margin: 4px 0 6px; }
+.gen-text { color: var(--ink-dim); font-size: .88rem; margin: 0 0 12px; }
+.gen-row { display: flex; gap: 8px; }
+.gen-input {
+  flex: 1; min-width: 0; font: inherit; font-size: .95rem;
+  padding: 11px 12px; border: 2px solid var(--ink); border-radius: 3px;
+  background: #fff; color: var(--ink);
+}
+.gen-btn {
+  flex: none; font: inherit; font-weight: 900; font-size: .92rem;
+  background: var(--red); color: #fff; border: 2px solid var(--ink);
+  border-radius: 3px; padding: 0 16px; cursor: pointer;
+  font-family: var(--font-head); letter-spacing: .03em;
+}
+.gen-btn:disabled { opacity: .55; cursor: wait; }
+.gen-status { min-height: 1.4em; color: var(--blue); font-size: .85rem; font-weight: 700; margin: 8px 2px 0; }

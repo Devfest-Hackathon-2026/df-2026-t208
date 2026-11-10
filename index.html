@@ -11,6 +11,15 @@
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
+<div id="splash" role="presentation">
+<div class="splash-sign">
+<div class="splash-logo">なぞまち<span>ワールド</span></div>
+<div class="splash-sub">NAZOMACHI WORLD</div>
+<div class="splash-bar"><i></i></div>
+<div class="splash-text">捜査ファイルを開いています</div>
+</div>
+</div>
+
 <header class="topbar">
 <div class="logo">なぞまち<span>ワールド</span></div>
 <div class="tagline">NAZOMACHI WORLD — 地球の全部が、事件現場になる。</div>
@@ -39,14 +48,26 @@
 <span class="badge">全3件 公開中</span>
 </div>
 
+<div class="gen-panel">
+<div class="gen-label num">CASE GENERATOR — 事件生成エンジン</div>
+<h2 class="gen-title">行き先から、事件を生成する</h2>
+<p class="gen-text">行く街が決まったら、その街専用の事件をその場で生成します。用意された3件から選ぶのではなく、君の旅のための1件を。地元の街でも、修学旅行の行き先でも。</p>
+<div class="gen-row">
+<input id="gen-input" class="gen-input" type="text" placeholder="行き先の街を入力（例：京都、松山、鎌倉）" autocomplete="off" maxlength="24">
+<button id="btn-generate" class="gen-btn" type="button">事件を生成する</button>
+</div>
+<p id="gen-status" class="gen-status"></p>
+</div>
+
+<div id="axis-tabs" class="axis-tabs" role="tablist"></div>
+<div id="discovery"></div>
+<h2 class="step-title"><span class="step-num num">検</span> ファイルを検索する</h2>
 <div class="search-row">
 <input id="search-input" class="search-input" type="search" placeholder="資料検索：場所・事件名・キーワード（例：祇園、水時計）" autocomplete="off">
 <button id="btn-shuffle" class="shuffle-btn" type="button">おまかせ捜査</button>
 </div>
 <p class="search-note">「おまかせ捜査」は、ファイルを1件ランダムに引き抜きます。</p>
 
-<div id="axis-tabs" class="axis-tabs" role="tablist"></div>
-<div id="discovery"></div>
 
 <p class="note">※ 全事件とも、おうちモード（Street View風の地図で捜査）で遊べます。事件は生成エンジンが実在のスポットから組み立てるため、今後もファイルは増え続けます。</p>
 </section>
@@ -393,6 +414,7 @@ Entertainment × Tourism<br>
 資料写真クレジット： 大阪・梅田 / phoenix_max（Wikimedia Commons, CC BY 3.0）ほか。詳細は提出資料の素材利用シートに記載。
 </footer>
 
+<script>setTimeout(function(){var s=document.getElementById("splash"); if(s){s.classList.add("gone"); s.remove();}},2100); document.addEventListener("click",function(){var s=document.getElementById("splash"); if(s){s.classList.add("gone"); s.remove();}},{once:false});</script>
 <script src="app.js"></script>
 </body>
 </html>
