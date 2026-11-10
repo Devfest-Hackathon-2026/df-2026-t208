@@ -702,11 +702,13 @@ function posterCardEl(sc) {
   el.type = "button";
   el.className = "poster-card";
   const isGen = sc.id.indexOf("gen-") === 0;
+  let solved = false;
+  try { solved = (JSON.parse(localStorage.getItem("nz-solved") || "[]")).indexOf(sc.id) >= 0; } catch (e) {}
   el.innerHTML =
     '<img src="' + sc.hero + '" alt="" loading="lazy">' +
     '<div class="poster-scrim"></div>' +
     (isGen ? '<span class="poster-gen">生成</span>' : "") +
-    '<span class="stamp ' + (m.difficulty === 3 ? "stamp-hard" : "") + '">' + (m.difficulty === 3 ? "難事件" : "未解決") + "</span>" +
+    '<span class="stamp ' + (solved ? "stamp-solved" : (m.difficulty === 3 ? "stamp-hard" : "")) + '">' + (solved ? "解決済" : (m.difficulty === 3 ? "難事件" : "未解決")) + "</span>" +
     '<span class="poster-body">' +
       '<span class="poster-place">' + sc.place + "</span>" +
       '<span class="poster-title">『' + sc.title + "』</span>" +
@@ -720,7 +722,7 @@ function upcomingPosterEl(u) {
   const el = document.createElement("div");
   el.className = "poster-card upcoming-card";
   el.innerHTML =
-    '<div class="poster-noimg"></div>' +
+    '<img src="assets/key-visual.webp" alt="" loading="lazy" class="upcoming-img">' +
     '<div class="poster-scrim"></div>' +
     '<span class="stamp stamp-pending">調査中</span>' +
     '<span class="poster-body">' +
@@ -874,7 +876,8 @@ function openDetail(id) {
   $("detail-table").innerHTML = rows.map((r) => "<div><dt>" + r[0] + "</dt><dd>" + r[1] + "</dd></div>").join("");
   $("detail-spot-count").textContent = "（全" + sc.spots.length + "件）";
   $("detail-ribbon").classList.toggle("hidden", id.indexOf("gen-") === 0);
-  $("detail-map").src = "https://maps.google.com/maps?q=" + encodeURIComponent(sc.spots[0].query) + "&z=15&output=embed";
+  const mapQuery = id.indexOf("gen-") === 0 ? sc.place : sc.spots[0].query;
+  $("detail-map").src = "https://maps.google.com/maps?q=" + encodeURIComponent(mapQuery) + "&z=14&output=embed";
   $("detail-spots").innerHTML = sc.spots.map((s, i) => "<li><span class='num-kanji'>" + KANJI_NUM[i] + "</span>" + s.name + "</li>").join("");
   const themes = $("detail-themes");
   themes.innerHTML = "";
@@ -1203,6 +1206,10 @@ function showResult() {
     "&theme=" + encodeURIComponent(state.theme) +
     "&result=solved";
   $("share-url").value = url;
+  try {
+    const solvedList = JSON.parse(localStorage.getItem("nz-solved") || "[]");
+    if (solvedList.indexOf(sc.id) < 0) { solvedList.push(sc.id); localStorage.setItem("nz-solved", JSON.stringify(solvedList)); }
+  } catch (e) {}
   const isGenCase = sc.id.indexOf("gen-") === 0;
   $("share-row").classList.toggle("hidden", isGenCase);
   $("share-gen-note").classList.toggle("hidden", !isGenCase);

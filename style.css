@@ -959,3 +959,7 @@ h1 {
 body[data-screen="home"] .topbar { display: none; }
 body[data-screen="home"] main { padding-top: 0; }
 body[data-screen="home"] .hero { margin-top: 0; }
+
+/* v4.2: 解決済スタンプと調査中ティザー */
+.stamp-solved { background: var(--green); color: #fff; }
+.upcoming-img { filter: brightness(.45) saturate(.6); }
