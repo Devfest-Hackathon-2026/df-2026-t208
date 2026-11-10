@@ -97,7 +97,7 @@ accessibility of travel), and explicit trade-off documentation (this file).
 - [ ] Demo video
 - [ ] Materials-use sheet (organizers' replaced sheet, 2026-11-07 version)
 - [ ] Presentation slides (on-site venue)
-- [x] Public URL live on Google infrastructure (Firebase Hosting, Spark plan): https://nazomachi-world-2026.web.app — kept up until Regional Day 2026-11-14
+- [x] Public URL live on Google infrastructure (Firebase Hosting, Spark plan): https://nazomachi-world-a3598.web.app — kept up until Regional Day 2026-11-14
 - [x] GitHub repository updated (this repo)
 
 ## 8. Development process note
@@ -109,3 +109,15 @@ Jules (Google's coding agent) was evaluated for GitHub-integrated work; it could
 not be installed on this organization-owned repository without the org owner's
 approval, so documentation was produced by the loop instead — recorded here as
 part of the build log.
+
+## Design references (checked on the live sites, 2026-11-09)
+
+The station-sign direction was validated against real products rather than invented:
+
+- **Tokyo Metro sign system** — colour + letter + number codes (e.g. G02) so identity never depends on colour alone. Nazomachi cases carry codes in the same grammar (UMD-01 / GIN-01 / ASK-01). Metro also linearises geography on route maps while keeping relative order — the same rule our route maps use.
+- **Citymapper** — the map stays pale and only information gets coloured chips. Our investigation map follows this: pale schematic, saturated pins and route lines only.
+- **SCRAP / Real Escape Game** — the site chrome stays black-and-white and colour lives in the event poster. Our UI is ink-and-paper with signal colours reserved for meaning; the per-case key illustration is treated as the "poster".
+- **GeoGuessr** — the pin is both brand and core interaction. Our spot pins are the primary control of the investigation screen.
+- **NAZOTOWN (mystery walking tours)** — conditions (time, difficulty, what to bring) are shown up front in labelled tables, and progress is shown as stamps. Our case cards carry the same numeric metadata (minutes / clues / difficulty) before play starts.
+
+Common thread across all five: verifiable specifics (real names, codes, numbers) come first, decoration is rationed to one system, and operational traces (a trial mystery, notes, constraints) are shown instead of hidden. That is what removes the "AI-generated" feel, and it is also why the station-sign language fits this product: the game is about navigating real places, so the design borrows the real city's own navigation grammar.

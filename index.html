@@ -5,139 +5,392 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>なぞまちワールド | NAZOMACHI WORLD</title>
 <meta name="description" content="場所を選ぶと、その場所でしか起きないミステリーが始まる。Street Viewの実写の街を歩いて捜査する探索ゲーム。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600&family=BIZ+UDPGothic:wght@400;700&family=Zen+Kaku+Gothic+New:wght@700;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 <header class="topbar">
-  <div class="logo">🔍 なぞまちワールド</div>
-  <div class="tagline">地球の全部が、事件現場になる。</div>
+<div class="logo">なぞまち<span>ワールド</span></div>
+<div class="tagline">NAZOMACHI WORLD — 地球の全部が、事件現場になる。</div>
 </header>
 
 <main id="app">
 
-  <!-- 共有リンクで来た人向けバナー -->
-  <div id="share-banner" class="share-banner hidden">
-    <span id="share-banner-text"></span>
-    <button id="btn-share-challenge" class="btn-secondary hidden">この事件に挑戦する</button>
-  </div>
+<!-- 運行情報バー（事件名＋手がかり数） -->
+<div id="status-bar" class="status-bar hidden">
+<span class="status-case"><span class="status-no" id="status-no">事件</span><span id="status-title">—</span></span>
+<span class="status-clues">手がかり <b class="num" id="status-clue">0/5</b></span>
+</div>
 
-  <!-- 画面1: 場所・テーマ選択 -->
-  <section id="screen-home" class="screen">
-    <img class="hero-img" src="assets/key-visual.webp" alt="なぞまちワールド キービジュアル：雨の梅田の街並みとデジタル捜査マップ">
-    <h1>どの街で、事件を起こす？</h1>
-    <p class="lead">【未解決事件ファイル】大阪・京都・東京——実在の街で起きた怪事件を、君の推理で解決せよ。実在のスポットを巡って手がかりを集め、犯人とトリックを暴き出してください。</p>
-    <div class="badge-row">
-      <span class="badge">🏠 おうちモード（Street View捜査）専用</span>
-    </div>
+<!-- 共有リンクで来た人向けバナー -->
+<div id="share-banner" class="share-banner hidden">
+<span id="share-banner-text"></span>
+<button id="btn-share-challenge" class="btn-secondary hidden">この事件に挑戦する</button>
+</div>
 
-    <h2 class="step-title"><span class="step-num">1</span> 場所を選ぶ</h2>
-    <div id="place-list" class="card-grid"></div>
+<!-- 画面1: 事件ファイルの発見（棚・検索・詳細への入口） -->
+<section id="screen-home" class="screen">
+<h1>どの街の事件を、捜査する？</h1>
+<p class="lead">実在の街で起きた怪事件のファイルが、ここに眠っている。場所から、時間から、気分から——探し方は自由だ。気になるファイルを1件選んで、詳細を開いてみよう。</p>
+<div class="badge-row">
+<span class="badge">おうちモード（Street View捜査）専用</span>
+<span class="badge">全3件 公開中</span>
+</div>
 
-    <h2 class="step-title"><span class="step-num">2</span> テーマを選ぶ</h2>
-    <div id="theme-list" class="chip-row"></div>
+<div class="search-row">
+<input id="search-input" class="search-input" type="search" placeholder="資料検索：場所・事件名・キーワード（例：祇園、水時計）" autocomplete="off">
+<button id="btn-shuffle" class="shuffle-btn" type="button">おまかせ捜査</button>
+</div>
+<p class="search-note">「おまかせ捜査」は、ファイルを1件ランダムに引き抜きます。</p>
 
-    <button id="btn-start" class="btn-primary" disabled>事件の幕を開ける</button>
-    <p class="note">※ おうちモード（Street View風の地図で捜査）で遊べます。所要時間 約10分</p>
-  </section>
+<div id="axis-tabs" class="axis-tabs" role="tablist"></div>
+<div id="discovery"></div>
 
-  <!-- 画面2: 事件の導入 -->
-  <section id="screen-case" class="screen hidden">
-    <div class="case-head">
-      <div id="case-place" class="case-place"></div>
-      <h1 id="case-title"></h1>
-    </div>
-    <div id="case-intro" class="intro-box"></div>
-    <div class="gm-line">
-      <div class="gm-avatar">🎩</div>
-      <div class="gm-bubble" id="case-gm"></div>
-    </div>
-    <button id="btn-investigate" class="btn-primary">捜査をはじめる</button>
-  </section>
+<p class="note">※ 全事件とも、おうちモード（Street View風の地図で捜査）で遊べます。事件は生成エンジンが実在のスポットから組み立てるため、今後もファイルは増え続けます。</p>
+</section>
 
-  <!-- 画面3: 捜査 -->
-  <section id="screen-investigate" class="screen hidden">
-    <div class="progress-wrap">
-      <div class="progress-label">手がかり <span id="clue-count">0</span> / 5</div>
-      <div class="progress-bar"><div id="progress-fill"></div></div>
-    </div>
+<!-- 画面1.5: 事件ファイル詳細 -->
+<section id="screen-detail" class="screen hidden">
+<button id="btn-back-home" class="back-link" type="button">← ファイル一覧へ戻る</button>
+<figure class="detail-photo">
+<img id="detail-photo" src="" alt="">
+<figcaption id="detail-photo-caption"></figcaption>
+</figure>
+<div class="detail-filed num"><span id="detail-fileno"></span> ／ <span id="detail-filed"></span></div>
+<div id="detail-place" class="detail-place"></div>
+<h1 id="detail-title"></h1>
+<p id="detail-desc" class="detail-desc"></p>
 
-    <div class="map-wrap">
-      <iframe id="map-frame" title="捜査マップ" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
-    </div>
-    <p id="sv-note" class="sv-note"></p>
+<h2 class="step-title"><span class="step-num num">1</span> 事件概要</h2>
+<dl id="detail-table" class="detail-table"></dl>
 
-    <h2 class="step-title">捜査スポット</h2>
-    <div id="spot-list" class="spot-list"></div>
+<h2 class="step-title"><span class="step-num num">2</span> 捜査スポット <span id="detail-spot-count" class="spot-count"></span></h2>
+<ol id="detail-spots" class="detail-spots"></ol>
+<p class="note-left">手がかりの中身は、現場で「現場検証」するまで封印されています。</p>
 
-    <div id="spot-detail" class="spot-detail hidden">
-      <h3 id="spot-name"></h3>
-      <p id="spot-fact" class="spot-fact"></p>
-      <div id="spot-analyzing" class="analyzing hidden">🔬 手がかりを解析中…</div>
-      <div id="spot-clue" class="clue-box hidden">
-        <div class="clue-label">🔎 手がかり発見！</div>
-        <p id="spot-clue-text"></p>
-      </div>
-      <button id="btn-collect" class="btn-secondary">🔍 現場検証する</button>
-    </div>
+<h2 class="step-title"><span class="step-num num">3</span> 語り口を選ぶ</h2>
+<div id="detail-themes" class="chip-row"></div>
+<p class="note-left">事件の導入文の語り口が変わります。事件の内容・真相は同じです。</p>
 
-    <div class="gm-panel">
-      <div class="gm-panel-title">🎩 AIゲームマスター</div>
-      <div id="gm-chat" class="gm-chat"></div>
-      <button id="btn-hint" class="btn-secondary">ヒントをもらう（Lv.1）</button>
-    </div>
+<button id="btn-detail-start" class="btn-primary">この事件の捜査をはじめる</button>
+</section>
 
-    <button id="btn-deduce" class="btn-primary" disabled>推理する（手がかりを全部集めると押せます）</button>
-  </section>
+<!-- 画面2: 事件の導入 -->
+<section id="screen-case" class="screen hidden">
+<div class="case-head">
+<div class="case-file-label">事件ファイル — CASE FILE</div>
+<div id="case-place" class="case-place"></div>
+<h1 id="case-title"></h1>
+</div>
+<div id="case-intro" class="intro-box"></div>
+<div class="gm-line">
+<div class="gm-avatar">GM</div>
+<div class="gm-bubble">
+<div class="gm-label">案内放送 — GAME MASTER</div>
+<div id="case-gm"></div>
+</div>
+</div>
+<button id="btn-investigate" class="btn-primary">捜査をはじめる</button>
+</section>
 
-  <!-- 画面4: 推理 -->
-  <section id="screen-deduce" class="screen hidden">
-    <h1>推理の時間</h1>
-    <p class="lead">集めた手がかりをもとに、犯人とトリックを当ててください。外れても大丈夫。何度でも挑戦できます。</p>
+<!-- 画面3: 捜査 -->
+<section id="screen-investigate" class="screen hidden">
+<div class="progress-wrap">
+<div class="progress-label">手がかり <span id="clue-count">0</span> / 5</div>
+<div class="progress-bar"><div id="progress-fill"></div></div>
+</div>
 
-    <details id="notebook" class="notebook">
-      <summary id="notebook-summary">📋 捜査手帳（集めた手がかり 0件）</summary>
-      <div id="notebook-list" class="notebook-list"></div>
-    </details>
+<!-- 簡略路線図マップ -->
+<div id="route-map" class="route-map">
 
-    <h2 class="step-title"><span class="step-num">Q1</span> 犯人は誰だ？</h2>
-    <div id="suspect-list" class="option-list"></div>
+<!-- 梅田 -->
+<div id="map-umeda" class="map-svg hidden">
+<svg viewBox="0 0 430 400" role="img" aria-label="梅田エリアの路線図風マップ">
+<rect x="0" y="0" width="430" height="400" fill="#EFF3EC"/>
+<g stroke="#DEE3D9" stroke-width="10">
+<line x1="0" y1="70" x2="430" y2="70"/>
+<line x1="0" y1="290" x2="430" y2="290"/>
+<line x1="120" y1="0" x2="120" y2="400"/>
+<line x1="350" y1="0" x2="350" y2="400"/>
+</g>
+<path d="M0,338 C90,322 150,352 235,340 C320,328 370,348 430,334 L430,400 L0,400 Z" fill="#BFE0F2"/>
+<text x="26" y="382" font-size="11" fill="#5E93B8" font-weight="700" letter-spacing="3">堂島川</text>
+<!-- JR線（灰・弧） -->
+<path d="M-10,150 C110,88 300,88 440,138" fill="none" stroke="#8A8F8A" stroke-width="8"/>
+<!-- 阪急線（茶赤・北東から） -->
+<polyline points="440,26 340,96 258,138" fill="none" stroke="#9E4A2F" stroke-width="7" stroke-linejoin="miter"/>
+<!-- 御堂筋線（赤・縦軸） -->
+<polyline points="272,-10 272,140 302,170 302,338" fill="none" stroke="#D6332B" stroke-width="7" stroke-linejoin="miter"/>
+<g fill="#fff" stroke="#1E2226" stroke-width="2.5">
+<circle cx="252" cy="128" r="6"/>
+<circle cx="302" cy="170" r="6"/>
+</g>
+<text x="14" y="30" font-size="10" fill="#6B7268" font-weight="700" letter-spacing="2">UMEDA — NORTH</text>
+<!-- 5 梅田スカイビル（北西） -->
+<g class="map-pin" data-place="umeda" data-spot="4" tabindex="0" role="button" aria-label="梅田スカイビル">
+<circle class="pin-halo" cx="62" cy="104" r="23"/>
+<circle class="pin-circle" cx="62" cy="104" r="17"/>
+<text class="pin-num" x="62" y="111">5</text>
+<text class="pin-check" x="62" y="111">✔</text>
+<text class="pin-label" x="62" y="140">スカイビル</text>
+</g>
+<!-- 1 太陽の広場（北・中央） -->
+<g class="map-pin" data-place="umeda" data-spot="0" tabindex="0" role="button" aria-label="太陽の広場">
+<circle class="pin-halo" cx="205" cy="92" r="23"/>
+<circle class="pin-circle" cx="205" cy="92" r="17"/>
+<text class="pin-num" x="205" y="99">1</text>
+<text class="pin-check" x="205" y="99">✔</text>
+<text class="pin-label" x="205" y="128">太陽の広場</text>
+</g>
+<!-- 3 HEP FIVE（北東） -->
+<g class="map-pin" data-place="umeda" data-spot="2" tabindex="0" role="button" aria-label="HEP FIVE">
+<circle class="pin-halo" cx="342" cy="98" r="23"/>
+<circle class="pin-circle" cx="342" cy="98" r="17"/>
+<text class="pin-num" x="342" y="105">3</text>
+<text class="pin-check" x="342" y="105">✔</text>
+<text class="pin-label" x="342" y="80">HEP FIVE</text>
+</g>
+<!-- 2 水の時計（中央・駅南側） -->
+<g class="map-pin" data-place="umeda" data-spot="1" tabindex="0" role="button" aria-label="水の時計">
+<circle class="pin-halo" cx="205" cy="212" r="23"/>
+<circle class="pin-circle" cx="205" cy="212" r="17"/>
+<text class="pin-num" x="205" y="219">2</text>
+<text class="pin-check" x="205" y="219">✔</text>
+<text class="pin-label" x="205" y="248">水の時計</text>
+</g>
+<!-- 4 露天神社（南東） -->
+<g class="map-pin" data-place="umeda" data-spot="3" tabindex="0" role="button" aria-label="露天神社">
+<circle class="pin-halo" cx="338" cy="238" r="23"/>
+<circle class="pin-circle" cx="338" cy="238" r="17"/>
+<text class="pin-num" x="338" y="245">4</text>
+<text class="pin-check" x="338" y="245">✔</text>
+<text class="pin-label" x="338" y="274">露天神社</text>
+</g>
+</svg>
+</div>
 
-    <h2 class="step-title"><span class="step-num">Q2</span> トリックは何だ？</h2>
-    <div id="trick-list" class="option-list"></div>
+<!-- 祇園 -->
+<div id="map-gion" class="map-svg hidden">
+<svg viewBox="0 0 430 400" role="img" aria-label="祇園エリアの路線図風マップ">
+<rect x="0" y="0" width="430" height="400" fill="#EFF3EC"/>
+<g stroke="#DEE3D9" stroke-width="10">
+<line x1="0" y1="150" x2="430" y2="150"/>
+<line x1="300" y1="0" x2="300" y2="400"/>
+</g>
+<!-- 鴨川（西端） -->
+<path d="M0,0 L40,0 C30,120 48,260 34,400 L0,400 Z" fill="#BFE0F2"/>
+<text x="10" y="30" font-size="11" fill="#5E93B8" font-weight="700" letter-spacing="3">鴨川</text>
+<!-- 白川（北） -->
+<path d="M40,96 C140,62 260,84 430,52" fill="none" stroke="#BFE0F2" stroke-width="14"/>
+<text x="120" y="52" font-size="11" fill="#5E93B8" font-weight="700" letter-spacing="3">白川</text>
+<!-- 四条通 -->
+<line x1="40" y1="150" x2="430" y2="150" stroke="#8A8F8A" stroke-width="8"/>
+<!-- 花見小路（南北） -->
+<line x1="232" y1="150" x2="232" y2="360" stroke="#9E4A2F" stroke-width="7"/>
+<text x="240" y="345" font-size="10" fill="#6B7268" font-weight="700" letter-spacing="2">花見小路</text>
+<text x="52" y="140" font-size="10" fill="#6B7268" font-weight="700" letter-spacing="2">四条通</text>
+<!-- 2 巽橋（北・白川） -->
+<g class="map-pin" data-place="gion" data-spot="1" tabindex="0" role="button" aria-label="祇園白川・巽橋">
+<circle class="pin-halo" cx="158" cy="86" r="23"/>
+<circle class="pin-circle" cx="158" cy="86" r="17"/>
+<text class="pin-num" x="158" y="93">2</text>
+<text class="pin-check" x="158" y="93">✔</text>
+<text class="pin-label" x="158" y="122">巽橋</text>
+</g>
+<!-- 5 円山公園（北東） -->
+<g class="map-pin" data-place="gion" data-spot="4" tabindex="0" role="button" aria-label="円山公園">
+<circle class="pin-halo" cx="392" cy="74" r="23"/>
+<circle class="pin-circle" cx="392" cy="74" r="17"/>
+<text class="pin-num" x="392" y="81">5</text>
+<text class="pin-check" x="392" y="81">✔</text>
+<text class="pin-label" x="392" y="110">円山公園</text>
+</g>
+<!-- 1 花見小路（中央） -->
+<g class="map-pin" data-place="gion" data-spot="0" tabindex="0" role="button" aria-label="花見小路通">
+<circle class="pin-halo" cx="232" cy="212" r="23"/>
+<circle class="pin-circle" cx="232" cy="212" r="17"/>
+<text class="pin-num" x="232" y="219">1</text>
+<text class="pin-check" x="232" y="219">✔</text>
+<text class="pin-label" x="232" y="248">花見小路</text>
+</g>
+<!-- 3 八坂神社（東端） -->
+<g class="map-pin" data-place="gion" data-spot="2" tabindex="0" role="button" aria-label="八坂神社">
+<circle class="pin-halo" cx="382" cy="168" r="23"/>
+<circle class="pin-circle" cx="382" cy="168" r="17"/>
+<text class="pin-num" x="382" y="175">3</text>
+<text class="pin-check" x="382" y="175">✔</text>
+<text class="pin-label" x="382" y="204">八坂神社</text>
+</g>
+<!-- 4 建仁寺（南西） -->
+<g class="map-pin" data-place="gion" data-spot="3" tabindex="0" role="button" aria-label="建仁寺">
+<circle class="pin-halo" cx="168" cy="318" r="23"/>
+<circle class="pin-circle" cx="168" cy="318" r="17"/>
+<text class="pin-num" x="168" y="325">4</text>
+<text class="pin-check" x="168" y="325">✔</text>
+<text class="pin-label" x="168" y="354">建仁寺</text>
+</g>
+</svg>
+</div>
 
-    <div id="deduce-error" class="error-box hidden"></div>
-    <button id="btn-answer" class="btn-primary">これで推理を告げる！</button>
-    <button id="btn-back-investigate" class="btn-ghost">捜査に戻る</button>
-  </section>
+<!-- 浅草 -->
+<div id="map-asakusa" class="map-svg hidden">
+<svg viewBox="0 0 430 400" role="img" aria-label="浅草エリアの路線図風マップ">
+<rect x="0" y="0" width="430" height="400" fill="#EFF3EC"/>
+<g stroke="#DEE3D9" stroke-width="10">
+<line x1="0" y1="330" x2="356" y2="330"/>
+<line x1="70" y1="0" x2="70" y2="400"/>
+<line x1="250" y1="0" x2="250" y2="330"/>
+</g>
+<!-- 隅田川（東） -->
+<path d="M362,0 L430,0 L430,400 L368,400 C356,280 372,120 362,0 Z" fill="#BFE0F2"/>
+<text x="382" y="30" font-size="11" fill="#5E93B8" font-weight="700" letter-spacing="3">隅田川</text>
+<!-- 吾妻橋 -->
+<line x1="268" y1="196" x2="372" y2="196" stroke="#8A8F8A" stroke-width="8"/>
+<!-- 仲見世（南北） -->
+<line x1="150" y1="118" x2="150" y2="330" stroke="#9E4A2F" stroke-width="7"/>
+<text x="160" y="300" font-size="10" fill="#6B7268" font-weight="700" letter-spacing="2">仲見世</text>
+<!-- 雷門通り -->
+<line x1="0" y1="330" x2="362" y2="330" stroke="#8A8F8A" stroke-width="8"/>
+<!-- 3 浅草寺・本堂（北） -->
+<g class="map-pin" data-place="asakusa" data-spot="2" tabindex="0" role="button" aria-label="浅草寺・本堂">
+<circle class="pin-halo" cx="150" cy="76" r="23"/>
+<circle class="pin-circle" cx="150" cy="76" r="17"/>
+<text class="pin-num" x="150" y="83">3</text>
+<text class="pin-check" x="150" y="83">✔</text>
+<text class="pin-label" x="150" y="112">浅草寺</text>
+</g>
+<!-- 2 仲見世通り（中央） -->
+<g class="map-pin" data-place="asakusa" data-spot="1" tabindex="0" role="button" aria-label="仲見世通り">
+<circle class="pin-halo" cx="150" cy="222" r="23"/>
+<circle class="pin-circle" cx="150" cy="222" r="17"/>
+<text class="pin-num" x="150" y="229">2</text>
+<text class="pin-check" x="150" y="229">✔</text>
+<text class="pin-label" x="150" y="258">仲見世通り</text>
+</g>
+<!-- 4 吾妻橋（東） -->
+<g class="map-pin" data-place="asakusa" data-spot="3" tabindex="0" role="button" aria-label="吾妻橋・隅田川">
+<circle class="pin-halo" cx="318" cy="196" r="23"/>
+<circle class="pin-circle" cx="318" cy="196" r="17"/>
+<text class="pin-num" x="318" y="203">4</text>
+<text class="pin-check" x="318" y="203">✔</text>
+<text class="pin-label" x="318" y="232">吾妻橋</text>
+</g>
+<!-- 1 雷門（南） -->
+<g class="map-pin" data-place="asakusa" data-spot="0" tabindex="0" role="button" aria-label="雷門">
+<circle class="pin-halo" cx="150" cy="330" r="23"/>
+<circle class="pin-circle" cx="150" cy="330" r="17"/>
+<text class="pin-num" x="150" y="337">1</text>
+<text class="pin-check" x="150" y="337">✔</text>
+<text class="pin-label" x="150" y="302">雷門</text>
+</g>
+<!-- 5 浅草文化観光センター（南西・雷門の向かい） -->
+<g class="map-pin" data-place="asakusa" data-spot="4" tabindex="0" role="button" aria-label="浅草文化観光センター">
+<circle class="pin-halo" cx="66" cy="282" r="23"/>
+<circle class="pin-circle" cx="66" cy="282" r="17"/>
+<text class="pin-num" x="66" y="289">5</text>
+<text class="pin-check" x="66" y="289">✔</text>
+<text class="pin-label" x="66" y="318">観光センター</text>
+</g>
+</svg>
+</div>
 
-  <!-- 画面5: 解決編 -->
-  <section id="screen-result" class="screen hidden">
-    <div class="solved-badge">🎉 事件解決！</div>
-    <div id="result-rank" class="rank-badge"></div>
-    <h1 id="result-title"></h1>
+<div class="map-legend">
+<span><i class="lg lg-todo"></i>未捜査</span>
+<span><i class="lg lg-active"></i>選択中</span>
+<span><i class="lg lg-done"></i>手がかり入手</span>
+</div>
+</div>
 
-    <h2 class="step-title">真相</h2>
-    <div id="result-truth" class="intro-box"></div>
+<h2 class="step-title"><span class="step-num num">駅</span> 捜査スポット一覧</h2>
+<div id="spot-list" class="spot-list"></div>
 
-    <h2 class="step-title">この街の「本当の話」</h2>
-    <div id="result-realstory" class="realstory-box"></div>
+<div id="spot-detail" class="spot-detail hidden">
+<div class="sign-head">
+<div class="pinnum num" id="spot-pinnum">1</div>
+<div class="sign-place">
+<div class="sign-kana" id="spot-kana">SPOT</div>
+<h3 id="spot-name"></h3>
+</div>
+</div>
+<img id="spot-thumb" class="spot-thumb" alt="">
+<p id="spot-fact" class="spot-fact"></p>
+<div id="spot-analyzing" class="analyzing hidden">手がかりを解析中…</div>
+<div id="spot-clue" class="clue-box hidden">
+<div class="clue-label">手がかり発見</div>
+<p id="spot-clue-text"></p>
+</div>
+<button id="btn-collect" class="btn-secondary">現場検証する</button>
+</div>
 
-    <h2 class="step-title">結果をシェアする</h2>
-    <p class="lead">同じ事件への挑戦リンクを友だちに送れます。</p>
-    <div class="share-row">
-      <input id="share-url" type="text" readonly>
-      <button id="btn-copy" class="btn-secondary">コピー</button>
-    </div>
-    <p id="copy-done" class="copy-done hidden">コピーしました！</p>
+<div class="map-real">
+<div class="map-real-label">実地図（資料） — GOOGLE MAPS</div>
+<div class="map-wrap">
+<iframe id="map-frame" title="捜査マップ" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+</div>
+<p id="sv-note" class="sv-note"></p>
+</div>
 
-    <button id="btn-again" class="btn-primary">別の事件に挑戦する</button>
-  </section>
+<div class="gm-panel">
+<div class="gm-panel-title">案内放送<span class="gm-panel-sub">AI GAME MASTER</span></div>
+<div id="gm-chat" class="gm-chat"></div>
+<button id="btn-hint" class="btn-secondary">ヒントをもらう（Lv.1）</button>
+</div>
+
+<button id="btn-deduce" class="btn-primary" disabled>推理する（手がかりを全部集めると押せます）</button>
+</section>
+
+<!-- 画面4: 推理 -->
+<section id="screen-deduce" class="screen hidden">
+<h1>推理の時間</h1>
+<p class="lead">集めた手がかりをもとに、犯人とトリックを当ててください。外れても大丈夫。何度でも挑戦できます。</p>
+
+<details id="notebook" class="notebook">
+<summary id="notebook-summary">捜査手帳（集めた手がかり 0件）</summary>
+<div id="notebook-list" class="notebook-list"></div>
+</details>
+
+<h2 class="step-title"><span class="step-num">Q1</span> 犯人は誰だ？</h2>
+<div id="suspect-list" class="option-list"></div>
+
+<h2 class="step-title"><span class="step-num">Q2</span> トリックは何だ？</h2>
+<div id="trick-list" class="option-list"></div>
+
+<div id="deduce-error" class="error-box hidden"></div>
+<button id="btn-answer" class="btn-primary btn-red">これで推理を告げる！</button>
+<button id="btn-back-investigate" class="btn-ghost">捜査に戻る</button>
+</section>
+
+<!-- 画面5: 解決編 -->
+<section id="screen-result" class="screen hidden">
+<div class="solved-badge">事件解決</div>
+<div id="result-rank" class="rank-badge"></div>
+<h1 id="result-title"></h1>
+
+<h2 class="step-title"><span class="step-num num">1</span> 真相</h2>
+<div id="result-truth" class="notice-box"></div>
+
+<h2 class="step-title"><span class="step-num num">2</span> この街の「本当の話」</h2>
+<div id="result-realstory" class="notice-box"></div>
+
+<h2 class="step-title"><span class="step-num num">3</span> 結果をシェアする</h2>
+<p class="lead">同じ事件への挑戦リンクを友だちに送れます。</p>
+<div class="share-row">
+<input id="share-url" type="text" readonly>
+<button id="btn-copy" class="btn-secondary">コピー</button>
+</div>
+<p id="copy-done" class="copy-done hidden">コピーしました！</p>
+
+<button id="btn-again" class="btn-primary">別の事件に挑戦する</button>
+</section>
 
 </main>
 
 <footer class="footer">
-  なぞまちワールド（NAZOMACHI WORLD）— DevFest GDGoC Japan Hackathon 2026 / チーム みらいクラフト（DF-2026-T208）<br>
-  Entertainment × Tourism
+なぞまちワールド（NAZOMACHI WORLD）— DevFest GDGoC Japan Hackathon 2026 / チーム みらいクラフト（DF-2026-T208）<br>
+Entertainment × Tourism<br>
+資料写真クレジット： 大阪・梅田 / phoenix_max（Wikimedia Commons, CC BY 3.0）ほか。詳細は提出資料の素材利用シートに記載。
 </footer>
 
 <script src="app.js"></script>

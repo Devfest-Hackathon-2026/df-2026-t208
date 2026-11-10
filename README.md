@@ -7,7 +7,7 @@ DevFest GDGoC Japan Hackathon 2026 / チーム みらいクラフト（DF-2026-T
 
 場所を選ぶと、その場所でしか起きないミステリー（事件）が始まる探索ゲームです。実在のスポットを巡って手がかりを集め、AIゲームマスターの段階ヒントで詰みを防ぎ、犯人とトリックを推理。解決編では「その街の本当の話」が明かされ、遊びが観光と学びにつながります。
 
-**公開URL: https://nazomachi-world-2026.web.app** （Firebase Hosting / Sparkプラン、Regional Day 2026-11-14 まで公開維持）
+**公開URL: https://nazomachi-world-a3598.web.app** （Firebase Hosting / Sparkプラン、Regional Day 2026-11-14 まで公開維持）
 
 ## 遊び方（画面の流れ）
 

@@ -7,9 +7,9 @@
 */
 
 const THEMES = [
-  { id: "detective", label: "🕵️ 探偵もの" },
-  { id: "school", label: "🎒 学園もの" },
-  { id: "horror", label: "👻 ホラー風" },
+  { id: "detective", label: "探偵もの" },
+  { id: "school", label: "学園もの" },
+  { id: "horror", label: "ホラー風" },
 ];
 
 const SCENARIOS = {
@@ -17,6 +17,8 @@ const SCENARIOS = {
   umeda: {
     id: "umeda",
     emoji: "🏙️",
+    color: "#0A6EBD",
+    hero: "assets/hero-umeda.webp",
     place: "大阪・梅田",
     title: "梅田迷宮と消えた水時計の設計図",
     desc: "止まった水時計と、街に散らばった5つの断片を追う。",
@@ -34,6 +36,7 @@ const SCENARIOS = {
       {
         name: "JR大阪駅 サウスゲート「太陽の広場」",
         icon: "☀️",
+        pin: "#0A6EBD",
         query: "大阪駅 太陽の広場",
         sv: "🗺️ Street View案内：大阪駅の南側、広場を見渡してみよう。ベンチが並ぶ一角が最初の捜査ポイントだ。",
         fact: "大阪ステーションシティには「時空（とき）の広場」「太陽の広場」など、テーマの異なる広場が点在し、待ち合わせや休憩の場所として親しまれている。",
@@ -42,6 +45,7 @@ const SCENARIOS = {
       {
         name: "南ゲート広場「水の時計」",
         icon: "💧",
+        pin: "#0A6EBD",
         query: "大阪駅 水の時計",
         sv: "🗺️ Street View案内：駅の南側の広場。水滴が文字を描く時計が見えるはずだ。点検口のあたりに注目しよう。",
         fact: "「水の時計」は、水滴を落として時刻や模様を描く噴水時計。大阪駅前のシンボルとして、写真を撮る観光客が絶えない。",
@@ -50,6 +54,7 @@ const SCENARIOS = {
       {
         name: "HEP FIVE 赤い観覧車",
         icon: "🎡",
+        pin: "#D6332B",
         query: "HEP FIVE 観覧車 梅田",
         sv: "🗺️ Street View案内：梅田の空に赤い観覧車が見える。ビルの屋上にある観覧車で、ゴンドラからは梅田を一望できる。",
         fact: "HEP FIVEの屋上にある赤い観覧車は梅田のランドマーク。地上約106mの高さまで上がる、ビル一体型の観覧車だ。",
@@ -58,6 +63,7 @@ const SCENARIOS = {
       {
         name: "曾根崎お初天神通り・露天神社（お初天神）",
         icon: "⛩️",
+        pin: "#0B9A55",
         query: "露天神社 お初天神 大阪",
         sv: "🗺️ Street View案内：曾根崎の路地を入った先にある、小さな神社。絵馬がたくさん掛かる場所を探そう。",
         fact: "露天神社は「お初天神」の名で親しまれる神社。近松門左衛門の人形浄瑠璃『曽根崎心中』の舞台となり、お初と徳兵衛の物語で知られる縁結びの神社だ。",
@@ -66,6 +72,7 @@ const SCENARIOS = {
       {
         name: "梅田スカイビル直下",
         icon: "🏙️",
+        pin: "#0B9A55",
         query: "梅田スカイビル",
         sv: "🗺️ Street View案内：2棟のビルが上部でつながった、空中庭園のあるビル。直下の広場や植え込みのあたりが捜査ポイントだ。",
         fact: "梅田スカイビルは1993年完成。2棟の高層ビルを上部で連結した珍しい構造で、空中庭園展望台は地上173m。設計は建築家の原広司。",
@@ -114,6 +121,8 @@ const SCENARIOS = {
   gion: {
     id: "gion",
     emoji: "🌸",
+    color: "#0B9A55",
+    hero: "assets/hero-gion.webp",
     place: "京都・祇園",
     title: "消えた花簪（かんざし）",
     desc: "新作発表会の前夜、祇園に伝わる桜の簪が桐箱ごと消えた。",
@@ -131,6 +140,7 @@ const SCENARIOS = {
       {
         name: "花見小路通",
         icon: "🏮",
+        pin: "#D6332B",
         query: "花見小路 京都",
         sv: "🗺️ Street View案内：石畳の通りの両側に茶屋が並ぶ、祇園のメインストリート。有名な一力亭の前あたりに注目。",
         fact: "花見小路通は祇園の中心を南北に走る石畳の通り。江戸時代からの茶屋建築が残り、老舗の茶屋・一力亭（いちりきてい）で知られる。",
@@ -139,6 +149,7 @@ const SCENARIOS = {
       {
         name: "祇園白川・巽橋",
         icon: "🌉",
+        pin: "#0A6EBD",
         query: "祇園白川 巽橋 京都",
         sv: "🗺️ Street View案内：柳の木と町家が川沿いに並ぶ一帯。小さな橋（巽橋）の欄干まわりをよく見てみよう。",
         fact: "祇園白川は、白川沿いに柳と町家が並ぶ情緒ある一帯。巽橋は写真撮影の名所で、ほとりには辰巳大明神が祀られている。",
@@ -147,6 +158,7 @@ const SCENARIOS = {
       {
         name: "八坂神社",
         icon: "⛩️",
+        pin: "#0B9A55",
         query: "八坂神社 京都",
         sv: "🗺️ Street View案内：四条通の突き当たり。朱い西楼門と石段が見えたら、そこが八坂神社だ。",
         fact: "八坂神社は祇園祭で知られる神社。もとは祇園社とも呼ばれ、全国の祇園神社の総本社。四条通に面した西楼門と石段が目印だ。",
@@ -155,6 +167,7 @@ const SCENARIOS = {
       {
         name: "建仁寺",
         icon: "🐉",
+        pin: "#0B9A55",
         query: "建仁寺 京都",
         sv: "🗺️ Street View案内：花見小路の南の端にある、静かな大寺院。門をくぐった先の受付が捜査ポイントだ。",
         fact: "建仁寺は1202年に栄西が開いた、京都で最も古い禅寺。俵屋宗達の『風神雷神図屏風』（原本は博物館で保管され、寺では精巧な複製を展示）や、天井画『双龍図』で知られる。",
@@ -163,6 +176,7 @@ const SCENARIOS = {
       {
         name: "円山公園",
         icon: "🌸",
+        pin: "#0B9A55",
         query: "円山公園 京都",
         sv: "🗺️ Street View案内：八坂神社の東側に広がる公園。有名な枝垂れ桜のあたりで聞き込みをしよう。",
         fact: "円山公園は1886年に開かれた、京都市で最も古い公園。一本の大きな枝垂れ桜は「祇園の夜桜」として知られる名物だ。",
@@ -211,6 +225,8 @@ const SCENARIOS = {
   asakusa: {
     id: "asakusa",
     emoji: "🏮",
+    color: "#D6332B",
+    hero: "assets/hero-asakusa.webp",
     place: "東京・浅草",
     title: "提灯に消えた設計図",
     desc: "雷門の大提灯の設計図の写しが、準備室から忽然と消えた。",
@@ -228,6 +244,7 @@ const SCENARIOS = {
       {
         name: "雷門（風雷神門）",
         icon: "🏮",
+        pin: "#D6332B",
         query: "雷門 浅草",
         sv: "🗺️ Street View案内：浅草の玄関口。大きな赤い提灯が見えたら、その真下が捜査ポイントだ。",
         fact: "雷門の正式名称は風雷神門（ふうじんらいじんもん）。大提灯は高さ約3.9m、重さ約700kg。現在の提灯は1960年、パナソニックの創業者・松下幸之助の寄進によって復興したものだ。",
@@ -236,6 +253,7 @@ const SCENARIOS = {
       {
         name: "仲見世通り",
         icon: "🛍️",
+        pin: "#D6332B",
         query: "仲見世通り 浅草",
         sv: "🗺️ Street View案内：雷門から寺へ続く、店がびっしり並ぶ通り。人形焼の店の前で聞き込みをしよう。",
         fact: "仲見世通りは雷門から宝蔵門まで約250m、およそ90店が並ぶ、日本で最も古い商店街のひとつ。人形焼や雷おこしが名物だ。",
@@ -244,6 +262,7 @@ const SCENARIOS = {
       {
         name: "浅草寺・本堂",
         icon: "🙏",
+        pin: "#0B9A55",
         query: "浅草寺 本堂",
         sv: "🗺️ Street View案内：仲見世を抜けた先の大きなお堂。お堂のわき、おみくじを結ぶ場所の近くが捜査ポイントだ。",
         fact: "浅草寺は、628年に隅田川で観音像が漁師の網にかかったという伝承から始まる、東京で最も古いお寺。観音様をまつる本堂は浅草の信仰の中心だ。",
@@ -252,6 +271,7 @@ const SCENARIOS = {
       {
         name: "吾妻橋・隅田川",
         icon: "🌉",
+        pin: "#0A6EBD",
         query: "吾妻橋 浅草",
         sv: "🗺️ Street View案内：隅田川にかかる橋。対岸に見える金色のオブジェが目印。橋のたもとの船着き場で聞き込みをしよう。",
         fact: "吾妻橋のたもとには、アサヒビール本社の金色の「炎のオブジェ」（フラムドール）がある。隅田川は古くから、江戸の水運の大動脈だった。",
@@ -260,6 +280,7 @@ const SCENARIOS = {
       {
         name: "浅草文化観光センター",
         icon: "🗼",
+        pin: "#0A6EBD",
         query: "浅草文化観光センター",
         sv: "🗺️ Street View案内：雷門の向かいにある、木組みのような外観の建物。屋上の展望テラスからは仲見世を見下ろせる。",
         fact: "浅草文化観光センターは、建築家・隈研吾の設計。屋上の展望テラスからは、仲見世通りと東京スカイツリーを一望できる。事件の準備室と入室記録はここにある。",
@@ -321,45 +342,227 @@ const state = {
 const $ = (id) => document.getElementById(id);
 
 function showScreen(name) {
-  ["home", "case", "investigate", "deduce", "result"].forEach((s) => {
+  ["home", "detail", "case", "investigate", "deduce", "result"].forEach((s) => {
     $("screen-" + s).classList.toggle("hidden", s !== name);
   });
+  $("status-bar").classList.toggle("hidden", name === "home" || name === "detail");
   window.scrollTo({ top: 0 });
 }
 
-/* ---------- 画面1: 場所・テーマ選択 ---------- */
-function renderHome() {
-  const list = $("place-list");
-  list.innerHTML = "";
-  Object.values(SCENARIOS).forEach((sc) => {
-    const btn = document.createElement("button");
-    btn.className = "place-card" + (state.place === sc.id ? " selected" : "");
-    btn.innerHTML =
-      '<div class="place-emoji">' + sc.emoji + "</div>" +
-      '<div class="place-name">' + sc.place + "</div>" +
-      '<div class="place-case">『' + sc.title + "』</div>" +
-      '<div class="place-desc">' + sc.desc + "</div>";
-    btn.addEventListener("click", () => {
-      state.place = sc.id;
-      renderHome();
-    });
-    list.appendChild(btn);
-  });
+/* ---------- 発見レイヤー：事件メタ ---------- */
+const CASE_META = {
+  umeda:   { fileNo: "NZ-2026-001", region: "関西", minutes: 12, difficulty: 2, solveRate: 68, tags: ["立体迷宮", "水時計", "都市の謎"], photo: "assets/photo-umeda.jpg", photoCaption: "資料写真：大阪・梅田（梅田スカイビル方面）", filed: "2026年11月2日 受理" },
+  gion:    { fileNo: "NZ-2026-002", region: "関西", minutes: 10, difficulty: 1, solveRate: 81, tags: ["歴史", "花街", "職人の技"], photo: "assets/photo-gion.jpg", photoCaption: "資料写真：京都・祇園（花見小路）", filed: "2026年11月3日 受理" },
+  asakusa: { fileNo: "NZ-2026-003", region: "関東", minutes: 15, difficulty: 3, solveRate: 47, tags: ["下町", "祭り", "職人の技"], photo: "assets/photo-asakusa.jpg", photoCaption: "資料写真：東京・浅草（雷門）", filed: "2026年11月4日 受理" },
+};
+const UPCOMING = [
+  { place: "神戸・南京町", region: "関西", status: "現地調査中" },
+  { place: "名古屋・大須", region: "中部", status: "現地調査中" },
+  { place: "金沢・ひがし茶屋街", region: "中部", status: "資料収集中" },
+  { place: "福岡・中洲", region: "九州", status: "現地調査中" },
+  { place: "札幌・すすきの", region: "北海道", status: "資料収集中" },
+];
+const DIFF_LABEL = { 1: "初級", 2: "標準", 3: "難事件" };
+const KANJI_NUM = ["一", "二", "三", "四", "五", "六", "七", "八"];
+let detailId = null;
+let axis = "shelves";
+let activeTag = null;
+let axisBuilt = false;
 
-  const themes = $("theme-list");
+const AXES = [
+  { id: "shelves", label: "おすすめの棚" },
+  { id: "region", label: "場所から探す" },
+  { id: "time", label: "時間から探す" },
+  { id: "mood", label: "雰囲気から探す" },
+  { id: "level", label: "難易度から探す" },
+];
+
+function caseCardEl(sc) {
+  const m = CASE_META[sc.id];
+  const btn = document.createElement("button");
+  btn.className = "file-card";
+  btn.innerHTML =
+    '<div class="file-band" style="background:' + sc.color + '"></div>' +
+    '<div class="file-photo"><img src="' + sc.hero + '" alt="' + sc.place + 'の街並み">' +
+    '<span class="file-no num">' + m.fileNo + "</span>" +
+    '<span class="stamp' + (m.difficulty === 3 ? " stamp-hard" : "") + '">' + (m.difficulty === 3 ? "難事件" : "未解決") + "</span></div>" +
+    '<div class="file-body">' +
+    '<div class="file-place num">' + sc.place + "｜" + m.region + "</div>" +
+    '<div class="file-title">『' + sc.title + "』</div>" +
+    '<p class="file-desc">' + sc.desc + "</p>" +
+    '<div class="file-meta num"><span>約' + m.minutes + '分</span><span>難易度 ' + DIFF_LABEL[m.difficulty] + "</span><span>手がかり" + sc.spots.length + '件</span><span>解決率' + m.solveRate + "%</span></div>" +
+    '<div class="file-tags">' + m.tags.map((t) => "<span>#" + t + "</span>").join("") + "</div>" +
+    "</div>";
+  btn.addEventListener("click", () => openDetail(sc.id));
+  return btn;
+}
+
+function upcomingCardEl(u) {
+  const div = document.createElement("div");
+  div.className = "file-card upcoming";
+  div.innerHTML =
+    '<div class="file-photo no-photo"><span class="file-no num">未採番</span><span class="stamp stamp-pending">調査中</span><span class="no-photo-label">写真なし</span></div>' +
+    '<div class="file-body">' +
+    '<div class="file-place num">' + u.place + "｜" + u.region + "</div>" +
+    '<div class="file-title">（題未定）</div>' +
+    '<p class="file-desc">生成エンジンが' + u.status + '。ファイルが開かれるまで、もうしばらくお待ちください。</p>' +
+    '<div class="file-meta num"><span>公開準備中</span></div>' +
+    "</div>";
+  return div;
+}
+
+function sectionEl(parent, title, note, layout) {
+  const h = document.createElement("h2");
+  h.className = "shelf-title";
+  h.textContent = title;
+  parent.appendChild(h);
+  if (note) {
+    const p = document.createElement("p");
+    p.className = "shelf-note";
+    p.textContent = note;
+    parent.appendChild(p);
+  }
+  const wrap = document.createElement("div");
+  wrap.className = layout === "scroll" ? "shelf-scroll" : "card-grid-files";
+  parent.appendChild(wrap);
+  return wrap;
+}
+
+function renderDiscovery() {
+  document.querySelectorAll(".axis-tab").forEach((t) => t.classList.toggle("active", t.dataset.axis === axis));
+  const root = $("discovery");
+  root.innerHTML = "";
+  const all = Object.values(SCENARIOS);
+  const q = $("search-input").value.trim();
+  if (q) {
+    const hits = all.filter((sc) => {
+      const m = CASE_META[sc.id];
+      return (sc.title + sc.place + sc.desc + m.tags.join("") + m.region).includes(q);
+    });
+    const grid = sectionEl(root, "「" + q + "」の検索結果（" + hits.length + "件）", null, "grid");
+    if (hits.length === 0) {
+      const p = document.createElement("p");
+      p.className = "empty-note";
+      p.innerHTML = '該当するファイルはありません。<br><button class="btn-secondary" type="button" id="btn-reset-search">条件をリセット</button>';
+      grid.appendChild(p);
+      $("btn-reset-search").addEventListener("click", () => { $("search-input").value = ""; renderDiscovery(); });
+    }
+    hits.forEach((sc) => grid.appendChild(caseCardEl(sc)));
+    return;
+  }
+  if (axis === "shelves") {
+    let w = sectionEl(root, "未解決ファイル", "ここに眠る、未解決の事件ファイル", "scroll");
+    all.forEach((sc) => w.appendChild(caseCardEl(sc)));
+    w = sectionEl(root, "短時間で決着する事件", "すきま時間の捜査に", "grid");
+    all.filter((sc) => CASE_META[sc.id].minutes <= 12).forEach((sc) => w.appendChild(caseCardEl(sc)));
+    w = sectionEl(root, "解決率の低い難事件", "多くの捜査員が途中で行き詰まったファイル", "grid");
+    [...all].sort((a, b) => CASE_META[a.id].solveRate - CASE_META[b.id].solveRate).forEach((sc) => w.appendChild(caseCardEl(sc)));
+    w = sectionEl(root, "調査中のファイル", "生成エンジンが現地調査を進めています", "scroll");
+    UPCOMING.forEach((u) => w.appendChild(upcomingCardEl(u)));
+  } else if (axis === "region") {
+    ["関西", "関東"].forEach((r) => {
+      const w = sectionEl(root, r + "のファイル", null, "grid");
+      all.filter((sc) => CASE_META[sc.id].region === r).forEach((sc) => w.appendChild(caseCardEl(sc)));
+    });
+    const w = sectionEl(root, "その他の地域", "公開準備中のファイル", "scroll");
+    UPCOMING.forEach((u) => w.appendChild(upcomingCardEl(u)));
+  } else if (axis === "time") {
+    const buckets = [
+      { label: "10分以内で決着", test: (min) => min <= 10 },
+      { label: "11〜15分でじっくり", test: (min) => min >= 11 && min <= 15 },
+    ];
+    buckets.forEach((b) => {
+      const w = sectionEl(root, b.label, null, "grid");
+      all.filter((sc) => b.test(CASE_META[sc.id].minutes)).forEach((sc) => w.appendChild(caseCardEl(sc)));
+    });
+    const w = sectionEl(root, "16分以上の長編ファイル", "現在、調査中のため未公開です", "scroll");
+    UPCOMING.slice(0, 2).forEach((u) => w.appendChild(upcomingCardEl(u)));
+  } else if (axis === "mood") {
+    const tags = [...new Set(all.flatMap((sc) => CASE_META[sc.id].tags))];
+    const chipWrap = document.createElement("div");
+    chipWrap.className = "chip-row tag-filter";
+    tags.forEach((t) => {
+      const b = document.createElement("button");
+      b.className = "theme-chip" + (activeTag === t ? " selected" : "");
+      b.textContent = "#" + t;
+      b.addEventListener("click", () => { activeTag = activeTag === t ? null : t; renderDiscovery(); });
+      chipWrap.appendChild(b);
+    });
+    root.appendChild(chipWrap);
+    const hits = activeTag ? all.filter((sc) => CASE_META[sc.id].tags.includes(activeTag)) : all;
+    const w = sectionEl(root, activeTag ? "「" + activeTag + "」のファイル" : "すべてのファイル", null, "grid");
+    hits.forEach((sc) => w.appendChild(caseCardEl(sc)));
+  } else if (axis === "level") {
+    [1, 2, 3].forEach((lv) => {
+      const notes = { 1: "まずはここから", 2: "捜査の腕試し", 3: "解決率の低いファイル" };
+      const w = sectionEl(root, DIFF_LABEL[lv] + " ― " + notes[lv], null, "grid");
+      all.filter((sc) => CASE_META[sc.id].difficulty === lv).forEach((sc) => w.appendChild(caseCardEl(sc)));
+    });
+  }
+}
+
+function renderHome() {
+  if (!axisBuilt) {
+    const tabs = $("axis-tabs");
+    AXES.forEach((a) => {
+      const b = document.createElement("button");
+      b.className = "axis-tab";
+      b.dataset.axis = a.id;
+      b.textContent = a.label;
+      b.setAttribute("role", "tab");
+      b.addEventListener("click", () => { axis = a.id; renderDiscovery(); });
+      tabs.appendChild(b);
+    });
+    $("search-input").addEventListener("input", renderDiscovery);
+    $("btn-shuffle").addEventListener("click", () => {
+      const ids = Object.keys(SCENARIOS);
+      const pick = ids[Math.floor(Math.random() * ids.length)];
+      const btn = $("btn-shuffle");
+      btn.textContent = "ファイルを引き抜いています…";
+      setTimeout(() => { btn.textContent = "おまかせ捜査"; openDetail(pick); }, 650);
+    });
+    axisBuilt = true;
+  }
+  if ($("search-input").value.trim() === "") axis = axis || "shelves";
+  renderDiscovery();
+}
+
+/* ---------- 画面1.5: 事件ファイル詳細 ---------- */
+function openDetail(id) {
+  if (!SCENARIOS[id]) return;
+  detailId = id;
+  const sc = SCENARIOS[id];
+  const m = CASE_META[id];
+  $("detail-photo").src = m.photo;
+  $("detail-photo").alt = "資料写真：" + sc.place;
+  $("detail-photo-caption").textContent = m.photoCaption;
+  $("detail-fileno").textContent = m.fileNo;
+  $("detail-filed").textContent = m.filed;
+  $("detail-place").textContent = sc.place;
+  $("detail-title").textContent = "『" + sc.title + "』";
+  $("detail-desc").textContent = sc.desc;
+  const rows = [
+    ["発生場所", sc.place + "（" + m.region + "）"],
+    ["所要時間", "約" + m.minutes + "分"],
+    ["難易度", DIFF_LABEL[m.difficulty]],
+    ["手がかり", sc.spots.length + "件"],
+    ["容疑者", sc.suspects.length + "名"],
+    ["解決率", m.solveRate + "%"],
+    ["捜査方法", "おうちモード（Street View捜査）"],
+  ];
+  $("detail-table").innerHTML = rows.map((r) => "<div><dt>" + r[0] + "</dt><dd>" + r[1] + "</dd></div>").join("");
+  $("detail-spot-count").textContent = "（全" + sc.spots.length + "件）";
+  $("detail-spots").innerHTML = sc.spots.map((s, i) => "<li><span class='num-kanji'>" + KANJI_NUM[i] + "</span>" + s.name + "</li>").join("");
+  const themes = $("detail-themes");
   themes.innerHTML = "";
   THEMES.forEach((t) => {
-    const btn = document.createElement("button");
-    btn.className = "theme-chip" + (state.theme === t.id ? " selected" : "");
-    btn.textContent = t.label;
-    btn.addEventListener("click", () => {
-      state.theme = t.id;
-      renderHome();
-    });
-    themes.appendChild(btn);
+    const b = document.createElement("button");
+    b.className = "theme-chip" + (state.theme === t.id ? " selected" : "");
+    b.textContent = t.label;
+    b.addEventListener("click", () => { state.theme = t.id; openDetail(detailId); });
+    themes.appendChild(b);
   });
-
-  $("btn-start").disabled = !state.place;
+  showScreen("detail");
 }
 
 /* ---------- 画面2: 導入 ---------- */
@@ -373,7 +576,11 @@ function startCase() {
   state.selectedTrick = -1;
   state.attempts = 0;
 
-  $("case-place").textContent = sc.emoji + " " + sc.place;
+  const caseNo = Object.keys(SCENARIOS).indexOf(sc.id) + 1;
+  $("case-place").textContent = "CASE 0" + caseNo + " — " + sc.place;
+  $("status-no").textContent = "第" + caseNo + "事件";
+  $("status-title").textContent = sc.title;
+  $("status-clue").textContent = "0/" + sc.spots.length;
   $("case-title").textContent = "『" + sc.title + "』";
   $("case-intro").textContent = sc.intros[state.theme] || sc.intros.detective;
   $("case-gm").textContent = sc.gmIntro;
@@ -384,12 +591,13 @@ function startCase() {
 function startInvestigate() {
   const sc = SCENARIOS[state.place];
   renderSpots();
+  renderRouteMap();
   $("gm-chat").innerHTML = "";
   gmSay(sc.gmIntro);
   updateProgress();
   updateHintButton();
   $("spot-detail").classList.add("hidden");
-  $("sv-note").textContent = "🗺️ まずは下のスポットを選んで、現場へ向かおう。";
+  $("sv-note").textContent = "まずは上の路線図か下の一覧でスポットを選んで、現場へ向かおう。";
   $("map-frame").removeAttribute("src");
   showScreen("investigate");
 }
@@ -403,10 +611,25 @@ function renderSpots() {
     const done = state.collected.has(i);
     btn.className = "spot-btn" + (done ? " done" : "") + (state.currentSpot === i ? " active" : "");
     btn.innerHTML =
-      '<span class="spot-main"><span class="spot-icon">' + (spot.icon || "📍") + "</span><span>" + (i + 1) + ". " + spot.name + "</span></span>" +
+      '<span class="spot-main"><span class="spot-pin num" style="--pin:' + (spot.pin || "#0A6EBD") + '">' + (i + 1) + '</span><span class="spot-name-text">' + spot.name + "</span></span>" +
       '<span class="spot-status">' + (done ? "✔ 手がかり入手" : "未捜査") + "</span>";
     btn.addEventListener("click", () => selectSpot(i));
     list.appendChild(btn);
+  });
+}
+
+function renderRouteMap() {
+  const sc = SCENARIOS[state.place];
+  if (!sc) return;
+  ["umeda", "gion", "asakusa"].forEach((id) => {
+    $("map-" + id).classList.toggle("hidden", id !== state.place);
+  });
+  document.querySelectorAll("#map-" + state.place + " .map-pin").forEach((g) => {
+    const i = +g.dataset.spot;
+    g.classList.toggle("done", state.collected.has(i));
+    g.classList.toggle("active", state.currentSpot === i);
+    const circle = g.querySelector(".pin-circle");
+    if (circle) circle.style.stroke = sc.spots[i].pin || "#0A6EBD";
   });
 }
 
@@ -416,17 +639,24 @@ function selectSpot(i) {
   state.currentSpot = i;
   $("map-frame").src =
     "https://maps.google.com/maps?q=" + encodeURIComponent(spot.query) + "&z=17&output=embed";
-  $("sv-note").textContent = spot.sv;
+  $("sv-note").textContent = spot.sv.replace(/^🗺️ /, "");
   $("spot-name").textContent = spot.name;
-  $("spot-fact").textContent = "📍 " + spot.fact;
+  $("spot-pinnum").textContent = i + 1;
+  $("spot-kana").textContent = "SPOT " + (i + 1) + " / " + sc.spots.length;
+  $("spot-detail").style.setProperty("--spot-color", spot.pin || "#0A6EBD");
+  const thumb = $("spot-thumb");
+  thumb.src = state.place === "umeda" ? "assets/spot-umeda-" + (i + 1) + ".webp" : sc.hero;
+  thumb.alt = spot.name + "の様子";
+  $("spot-fact").textContent = spot.fact;
   const already = state.collected.has(i);
   $("spot-analyzing").classList.add("hidden");
   $("spot-clue").classList.toggle("hidden", !already);
   if (already) $("spot-clue-text").textContent = spot.clue;
-  $("btn-collect").textContent = already ? "✔ 調査済み" : "🔍 現場検証する";
+  $("btn-collect").textContent = already ? "✔ 調査済み" : "現場検証する";
   $("btn-collect").disabled = already;
   $("spot-detail").classList.remove("hidden");
   renderSpots();
+  renderRouteMap();
   $("spot-detail").scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
@@ -457,10 +687,11 @@ function collectClue() {
       btn.disabled = true;
     }
     renderSpots();
+    renderRouteMap();
     updateProgress();
     if (state.collected.size === sc.spots.length) {
       gmSay("すごい！ 手がかりが全部そろったね。あとは推理だ。下の「推理する」ボタンから進んでくれ。外してもペナルティはないから、自信を持って当ててみよう。");
-      $("btn-deduce").textContent = "推理する 🔍";
+      $("btn-deduce").textContent = "推理する";
     } else {
       gmSay("手がかりを1つ手に入れた（" + state.collected.size + " / " + sc.spots.length + "）。残りのスポットもまわってみよう。");
     }
@@ -471,6 +702,7 @@ function updateProgress() {
   const sc = SCENARIOS[state.place];
   const n = state.collected.size;
   $("clue-count").textContent = n;
+  $("status-clue").textContent = n + "/" + sc.spots.length;
   $("progress-fill").style.width = (n / sc.spots.length) * 100 + "%";
   const ready = n === sc.spots.length;
   $("btn-deduce").disabled = !ready;
@@ -482,7 +714,7 @@ function gmSay(text) {
   const chat = $("gm-chat");
   const div = document.createElement("div");
   div.className = "chat-msg gm";
-  div.textContent = "🎩 " + text;
+  div.textContent = text;
   chat.appendChild(div);
   chat.scrollTop = chat.scrollHeight;
 }
@@ -519,7 +751,7 @@ function renderNotebook() {
   const sc = SCENARIOS[state.place];
   const items = [...state.collected].sort((a, b) => a - b);
   $("notebook-summary").textContent =
-    "📋 捜査手帳（集めた手がかり " + items.length + "件）";
+    "捜査手帳（集めた手がかり " + items.length + "件）";
   const list = $("notebook-list");
   list.innerHTML = "";
   items.forEach((i) => {
@@ -527,7 +759,12 @@ function renderNotebook() {
     const div = document.createElement("div");
     div.className = "notebook-item";
     const head = document.createElement("h4");
-    head.textContent = (spot.icon || "📍") + " " + spot.name;
+    const pin = document.createElement("span");
+    pin.className = "nb-pin num";
+    pin.style.setProperty("--pin", spot.pin || "#0A6EBD");
+    pin.textContent = i + 1;
+    head.appendChild(pin);
+    head.appendChild(document.createTextNode(spot.name));
     const body = document.createElement("p");
     body.textContent = spot.clue;
     div.appendChild(head);
@@ -550,7 +787,7 @@ function startDeduce() {
     const div = document.createElement("div");
     div.className = "option-card";
     div.innerHTML =
-      '<div class="opt-name">' + s.name + '</div>' +
+      '<div class="opt-head"><span class="opt-no num">' + (i + 1) + '</span><span class="opt-name">' + s.name + "</span></div>" +
       '<div class="opt-role">' + s.role + "</div>" +
       '<div class="opt-statement">' + s.statement + "</div>";
     div.addEventListener("click", () => {
@@ -567,7 +804,7 @@ function startDeduce() {
   sc.tricks.forEach((t, i) => {
     const div = document.createElement("div");
     div.className = "option-card";
-    div.innerHTML = '<div class="opt-name">' + t + "</div>";
+    div.innerHTML = '<div class="opt-head"><span class="opt-no num">' + (i + 1) + '</span><span class="opt-name">' + t + "</span></div>";
     div.addEventListener("click", () => {
       state.selectedTrick = i;
       tl.querySelectorAll(".option-card").forEach((el, j) =>
@@ -595,7 +832,7 @@ function answer() {
     showResult();
     return;
   }
-  let msg = "🎩 GM：惜しい！ その推理には、手がかりと合わない点がある。\n";
+  let msg = "GM：惜しい！ その推理には、手がかりと合わない点がある。\n";
   if (!culpritOk && !trickOk) {
     msg += "犯人もトリックも、もう一度手がかりと照らし合わせてみよう。捜査に戻って手がかりを読み直すのも有効だ。";
   } else if (!culpritOk) {
@@ -664,18 +901,32 @@ function init() {
     const sc = SCENARIOS[sharedCase];
     if (params.get("result") === "solved") {
       $("share-banner-text").textContent =
-        "🔗 友だちが「" + sc.place + "」の事件『" + sc.title + "』を解決しました！ あなたも同じ事件に挑戦してみよう。";
+        "友だちが「" + sc.place + "」の事件『" + sc.title + "』を解決しました！ あなたも同じ事件に挑戦してみよう。";
     } else {
       $("share-banner-text").textContent =
-        "🔗 シェアされた事件『" + sc.title + "』（" + sc.place + "）が届いています。";
+        "シェアされた事件『" + sc.title + "』（" + sc.place + "）が届いています。";
     }
     $("share-banner").classList.remove("hidden");
     $("btn-share-challenge").classList.remove("hidden");
   }
 
+  document.querySelectorAll(".map-pin").forEach((g) => {
+    const go = () => {
+      if (g.dataset.place === state.place) selectSpot(+g.dataset.spot);
+    };
+    g.addEventListener("click", go);
+    g.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        go();
+      }
+    });
+  });
+
   renderHome();
-  $("btn-share-challenge").addEventListener("click", startCase);
-  $("btn-start").addEventListener("click", startCase);
+  $("btn-share-challenge").addEventListener("click", () => openDetail(state.place));
+  $("btn-back-home").addEventListener("click", () => showScreen("home"));
+  $("btn-detail-start").addEventListener("click", () => { state.place = detailId; startCase(); });
   $("btn-investigate").addEventListener("click", startInvestigate);
   $("btn-collect").addEventListener("click", collectClue);
   $("btn-hint").addEventListener("click", giveHint);
