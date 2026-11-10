@@ -342,6 +342,7 @@ const state = {
 const $ = (id) => document.getElementById(id);
 
 function showScreen(name) {
+  document.body.dataset.screen = name;
   ["home", "detail", "case", "investigate", "deduce", "result"].forEach((s) => {
     $("screen-" + s).classList.toggle("hidden", s !== name);
   });
@@ -383,7 +384,7 @@ const SPOT_TYPES = [
   { label: "展望スポット", q: "展望台", icon: "🔭", fact: "高い場所からは街が一望できる。事件の時間帯の様子を見ていた人がいるかもしれない。", sv: "Street View案内：展望スペースからの眺めと、出入口のあたりを確認しよう。" },
 ];
 const GEN_COLORS = ["#0A6EBD", "#0B9A55", "#D6332B"];
-const GEN_HEROES = ["assets/hero-umeda.webp", "assets/hero-gion.webp", "assets/hero-asakusa.webp", "assets/key-visual.webp"];
+const GEN_HEROES = ["assets/hero-umeda.webp", "assets/hero-gion.webp", "assets/hero-asakusa.webp"];
 
 const STORY_KITS = [
   {
@@ -624,6 +625,10 @@ function generateCase(rawPlace) {
     photoCaption: "キービジュアル：" + place + "の事件ファイル（生成エンジン選定）",
     filed: "生成エンジンにより受理",
   };
+  try {
+    const savedPlaces = JSON.parse(localStorage.getItem("nz-gen-places") || "[]");
+    if (savedPlaces.indexOf(place) < 0) { savedPlaces.push(place); localStorage.setItem("nz-gen-places", JSON.stringify(savedPlaces)); }
+  } catch (e) {}
   return id;
 }
 
@@ -642,10 +647,10 @@ function runGenerate() {
   const btn = $("btn-generate");
   btn.disabled = true;
   const steps = [
-    place + "のスポットを選定しています…",
-    "容疑者3人を配置しています…",
-    "手がかりを街に仕掛けています…",
-    "事件ファイルを作成しています…",
+    "Google Maps で「" + place + "」の実在スポットを確認中…",
+    "事件の舞台を地図に配置中…",
+    "容疑者と手がかりを生成中…",
+    "事件ファイルを仕上げ中…",
   ];
   let i = 0;
   status.textContent = steps[0];
@@ -657,6 +662,7 @@ function runGenerate() {
     generating = false;
     btn.disabled = false;
     status.textContent = "『" + place + "』の事件ファイルが生成されました。";
+    renderMainShelf();
     openDetail(id);
   }, 420);
 }
@@ -667,167 +673,167 @@ const CASE_META = {
   gion:    { fileNo: "NZ-2026-002", region: "関西", minutes: 10, difficulty: 1, solveRate: 81, tags: ["歴史", "花街", "職人の技"], photo: "assets/photo-gion.jpg", photoCaption: "資料写真：京都・祇園（花見小路）", filed: "2026年11月3日 受理" },
   asakusa: { fileNo: "NZ-2026-003", region: "関東", minutes: 15, difficulty: 3, solveRate: 47, tags: ["下町", "祭り", "職人の技"], photo: "assets/photo-asakusa.jpg", photoCaption: "資料写真：東京・浅草（雷門）", filed: "2026年11月4日 受理" },
 };
+const DIFF_NAMES = ["", "初級", "標準", "難事件"];
+const DIFF_LABEL = DIFF_NAMES;
+const KANJI_NUM = ["一", "二", "三", "四", "五"];
 const UPCOMING = [
-  { place: "神戸・南京町", region: "関西", status: "現地調査中" },
-  { place: "名古屋・大須", region: "中部", status: "現地調査中" },
-  { place: "金沢・ひがし茶屋街", region: "中部", status: "資料収集中" },
-  { place: "福岡・中洲", region: "九州", status: "現地調査中" },
-  { place: "札幌・すすきの", region: "北海道", status: "資料収集中" },
+  {place:"神戸・南京町", note:"港町の食卓に隠された、店主の秘密。"},
+  {place:"名古屋・大須", note:"電脳商店街で起きた、部品のすり替え。"},
+  {place:"金沢・ひがし茶屋街", note:"夕闇の茶屋に届いた、差出人不明の手紙。"},
+  {place:"福岡・中洲", note:"川沿いの屋台で消えた、老舗の秘伝帳。"},
+  {place:"札幌・すすきの", note:"雪夜の灯りに紛れた、偽りの招待状。"},
 ];
-const DIFF_LABEL = { 1: "初級", 2: "標準", 3: "難事件" };
-const KANJI_NUM = ["一", "二", "三", "四", "五", "六", "七", "八"];
+let axis = "region"; // region | time | mood | level
 let detailId = null;
-let axis = "shelves";
-let activeTag = null;
-let axisBuilt = false;
+let homeWired = false;
 
-const AXES = [
-  { id: "shelves", label: "おすすめの棚" },
-  { id: "region", label: "場所から探す" },
-  { id: "time", label: "時間から探す" },
-  { id: "mood", label: "雰囲気から探す" },
-  { id: "level", label: "難易度から探す" },
-];
+function metaFor(id) {
+  if (CASE_META[id]) return CASE_META[id];
+  if (id.indexOf("gen-") === 0) return { fileNo: "NZ-GEN-" + id.slice(4, 7).toUpperCase(), region: "生成", minutes: 12, difficulty: 2, solveRate: null, tags: ["生成事件"] };
+  return null;
+}
+function diffName(m) { return DIFF_NAMES[m.difficulty] || "標準"; }
 
-function caseCardEl(sc) {
-  const m = CASE_META[sc.id];
-  const btn = document.createElement("button");
-  btn.className = "file-card";
-  btn.innerHTML =
-    '<div class="file-band" style="background:' + sc.color + '"></div>' +
-    '<div class="file-photo"><img src="' + sc.hero + '" alt="' + sc.place + 'の街並み">' +
-    '<span class="file-no num">' + m.fileNo + "</span>" +
-    '<span class="stamp' + (m.difficulty === 3 ? " stamp-hard" : "") + '">' + (m.difficulty === 3 ? "難事件" : "未解決") + "</span></div>" +
-    '<div class="file-body">' +
-    '<div class="file-place num">' + sc.place + "｜" + m.region + "</div>" +
-    '<div class="file-title">『' + sc.title + "』</div>" +
-    '<p class="file-desc">' + sc.desc + "</p>" +
-    '<div class="file-meta num"><span>約' + m.minutes + '分</span><span>難易度 ' + DIFF_LABEL[m.difficulty] + "</span><span>手がかり" + sc.spots.length + '件</span><span>解決率' + m.solveRate + "%</span></div>" +
-    '<div class="file-tags">' + m.tags.map((t) => "<span>#" + t + "</span>").join("") + "</div>" +
-    "</div>";
-  btn.addEventListener("click", () => openDetail(sc.id));
-  return btn;
+/* ---------- ポスターカード ---------- */
+function posterCardEl(sc) {
+  const m = metaFor(sc.id);
+  if (!m) return null;
+  const el = document.createElement("button");
+  el.type = "button";
+  el.className = "poster-card";
+  const isGen = sc.id.indexOf("gen-") === 0;
+  el.innerHTML =
+    '<img src="' + sc.hero + '" alt="" loading="lazy">' +
+    '<div class="poster-scrim"></div>' +
+    (isGen ? '<span class="poster-gen">生成</span>' : "") +
+    '<span class="stamp ' + (m.difficulty === 3 ? "stamp-hard" : "") + '">' + (m.difficulty === 3 ? "難事件" : "未解決") + "</span>" +
+    '<span class="poster-body">' +
+      '<span class="poster-place">' + sc.place + "</span>" +
+      '<span class="poster-title">『' + sc.title + "』</span>" +
+      '<span class="poster-meta num">約' + m.minutes + "分 ・ " + diffName(m) + "</span>" +
+    "</span>";
+  el.addEventListener("click", () => openDetail(sc.id));
+  return el;
 }
 
-function upcomingCardEl(u) {
-  const div = document.createElement("div");
-  div.className = "file-card upcoming";
-  div.innerHTML =
-    '<div class="file-photo no-photo"><span class="file-no num">未採番</span><span class="stamp stamp-pending">調査中</span><span class="no-photo-label">写真なし</span></div>' +
-    '<div class="file-body">' +
-    '<div class="file-place num">' + u.place + "｜" + u.region + "</div>" +
-    '<div class="file-title">（題未定）</div>' +
-    '<p class="file-desc">生成エンジンが' + u.status + '。ファイルが開かれるまで、もうしばらくお待ちください。</p>' +
-    '<div class="file-meta num"><span>公開準備中</span></div>' +
-    "</div>";
-  return div;
+function upcomingPosterEl(u) {
+  const el = document.createElement("div");
+  el.className = "poster-card upcoming-card";
+  el.innerHTML =
+    '<div class="poster-noimg"></div>' +
+    '<div class="poster-scrim"></div>' +
+    '<span class="stamp stamp-pending">調査中</span>' +
+    '<span class="poster-body">' +
+      '<span class="poster-place">' + u.place + "</span>" +
+      '<span class="poster-title">事件ファイルを調査中</span>' +
+      '<span class="poster-meta">' + u.note + "</span>" +
+    "</span>";
+  return el;
 }
 
-function sectionEl(parent, title, note, layout) {
-  const h = document.createElement("h2");
-  h.className = "shelf-title";
-  h.textContent = title;
-  parent.appendChild(h);
-  if (note) {
-    const p = document.createElement("p");
-    p.className = "shelf-note";
-    p.textContent = note;
-    parent.appendChild(p);
-  }
+function shelfRowEl(title, cards) {
   const wrap = document.createElement("div");
-  wrap.className = layout === "scroll" ? "shelf-scroll" : "card-grid-files";
-  parent.appendChild(wrap);
+  wrap.className = "shelf";
+  wrap.innerHTML = '<div class="shelf-head"><h3 class="shelf-title">' + title + "</h3></div>";
+  const row = document.createElement("div");
+  row.className = "poster-row";
+  cards.forEach(c => { if (c) row.appendChild(c); });
+  wrap.appendChild(row);
   return wrap;
 }
 
-function renderDiscovery() {
-  document.querySelectorAll(".axis-tab").forEach((t) => t.classList.toggle("active", t.dataset.axis === axis));
-  const root = $("discovery");
-  root.innerHTML = "";
-  const all = Object.values(SCENARIOS);
+/* ---------- メイン棚（ヒーロー直下） ---------- */
+function renderMainShelf() {
+  const box = $("discovery-main");
+  if (!box) return;
+  box.innerHTML = "";
+  box.appendChild(shelfRowEl("未解決ファイル", Object.values(SCENARIOS).map(posterCardEl)));
+  box.appendChild(shelfRowEl("調査中のファイル", UPCOMING.map(upcomingPosterEl)));
+}
+
+/* ---------- もっと探す（軸タブ＋検索） ---------- */
+const AXES = [
+  {id:"region", label:"場所から"},
+  {id:"time", label:"時間から"},
+  {id:"mood", label:"雰囲気から"},
+  {id:"level", label:"難易度から"},
+];
+
+function renderMore() {
+  const box = $("discovery-more");
+  if (!box) return;
+  box.innerHTML = "";
+  const cases = Object.values(SCENARIOS);
   const q = $("search-input").value.trim();
   if (q) {
-    const hits = all.filter((sc) => {
-      const m = CASE_META[sc.id];
-      return (sc.title + sc.place + sc.desc + m.tags.join("") + m.region).includes(q);
+    const hit = cases.filter(sc => {
+      const m = metaFor(sc.id);
+      if (!m) return false;
+      return [sc.place, sc.title, sc.desc, m.tags.join(" ")].join(" ").indexOf(q) >= 0;
     });
-    const grid = sectionEl(root, "「" + q + "」の検索結果（" + hits.length + "件）", null, "grid");
-    if (hits.length === 0) {
+    if (!hit.length) {
       const p = document.createElement("p");
-      p.className = "empty-note";
-      p.innerHTML = '該当するファイルはありません。<br><button class="btn-secondary" type="button" id="btn-reset-search">条件をリセット</button>';
-      grid.appendChild(p);
-      $("btn-reset-search").addEventListener("click", () => { $("search-input").value = ""; renderDiscovery(); });
+      p.className = "note";
+      p.textContent = "「" + q + "」に該当する事件ファイルがありません。別のキーワードで探してみてください。";
+      box.appendChild(p);
+    } else {
+      box.appendChild(shelfRowEl("「" + q + "」の検索結果（" + hit.length + "件）", hit.map(posterCardEl)));
     }
-    hits.forEach((sc) => grid.appendChild(caseCardEl(sc)));
     return;
   }
-  if (axis === "shelves") {
-    let w = sectionEl(root, "未解決ファイル", "ここに眠る、未解決の事件ファイル", "scroll");
-    all.forEach((sc) => w.appendChild(caseCardEl(sc)));
-    w = sectionEl(root, "短時間で決着する事件", "すきま時間の捜査に", "grid");
-    all.filter((sc) => CASE_META[sc.id].minutes <= 12).forEach((sc) => w.appendChild(caseCardEl(sc)));
-    w = sectionEl(root, "解決率の低い難事件", "多くの捜査員が途中で行き詰まったファイル", "grid");
-    [...all].sort((a, b) => CASE_META[a.id].solveRate - CASE_META[b.id].solveRate).forEach((sc) => w.appendChild(caseCardEl(sc)));
-    w = sectionEl(root, "調査中のファイル", "生成エンジンが現地調査を進めています", "scroll");
-    UPCOMING.forEach((u) => w.appendChild(upcomingCardEl(u)));
-  } else if (axis === "region") {
-    ["関西", "関東"].forEach((r) => {
-      const w = sectionEl(root, r + "のファイル", null, "grid");
-      all.filter((sc) => CASE_META[sc.id].region === r).forEach((sc) => w.appendChild(caseCardEl(sc)));
+  if (axis === "region") {
+    [["関西", "関西の事件"], ["関東", "関東の事件"], ["生成", "この端末で生成した事件"]].forEach(([r, label]) => {
+      const list = cases.filter(sc => { const m = metaFor(sc.id); return m && m.region === r; });
+      if (list.length) box.appendChild(shelfRowEl(label, list.map(posterCardEl)));
     });
-    const w = sectionEl(root, "その他の地域", "公開準備中のファイル", "scroll");
-    UPCOMING.forEach((u) => w.appendChild(upcomingCardEl(u)));
   } else if (axis === "time") {
-    const buckets = [
-      { label: "10分以内で決着", test: (min) => min <= 10 },
-      { label: "11〜15分でじっくり", test: (min) => min >= 11 && min <= 15 },
-    ];
-    buckets.forEach((b) => {
-      const w = sectionEl(root, b.label, null, "grid");
-      all.filter((sc) => b.test(CASE_META[sc.id].minutes)).forEach((sc) => w.appendChild(caseCardEl(sc)));
+    [["10分で決着", c => metaFor(c.id).minutes <= 10], ["じっくり捜査（11分〜）", c => metaFor(c.id).minutes > 10]].forEach(([label, f]) => {
+      const list = cases.filter(c => metaFor(c.id) && f(c));
+      if (list.length) box.appendChild(shelfRowEl(label, list.map(posterCardEl)));
     });
-    const w = sectionEl(root, "16分以上の長編ファイル", "現在、調査中のため未公開です", "scroll");
-    UPCOMING.slice(0, 2).forEach((u) => w.appendChild(upcomingCardEl(u)));
   } else if (axis === "mood") {
-    const tags = [...new Set(all.flatMap((sc) => CASE_META[sc.id].tags))];
-    const chipWrap = document.createElement("div");
-    chipWrap.className = "chip-row tag-filter";
-    tags.forEach((t) => {
-      const b = document.createElement("button");
-      b.className = "theme-chip" + (activeTag === t ? " selected" : "");
-      b.textContent = "#" + t;
-      b.addEventListener("click", () => { activeTag = activeTag === t ? null : t; renderDiscovery(); });
-      chipWrap.appendChild(b);
+    const tags = [];
+    cases.forEach(c => { const m = metaFor(c.id); if (m) m.tags.forEach(t => { if (tags.indexOf(t) < 0) tags.push(t); }); });
+    tags.forEach(t => {
+      const list = cases.filter(c => { const m = metaFor(c.id); return m && m.tags.indexOf(t) >= 0; });
+      if (list.length) box.appendChild(shelfRowEl(t + "の事件", list.map(posterCardEl)));
     });
-    root.appendChild(chipWrap);
-    const hits = activeTag ? all.filter((sc) => CASE_META[sc.id].tags.includes(activeTag)) : all;
-    const w = sectionEl(root, activeTag ? "「" + activeTag + "」のファイル" : "すべてのファイル", null, "grid");
-    hits.forEach((sc) => w.appendChild(caseCardEl(sc)));
   } else if (axis === "level") {
-    [1, 2, 3].forEach((lv) => {
-      const notes = { 1: "まずはここから", 2: "捜査の腕試し", 3: "解決率の低いファイル" };
-      const w = sectionEl(root, DIFF_LABEL[lv] + " ― " + notes[lv], null, "grid");
-      all.filter((sc) => CASE_META[sc.id].difficulty === lv).forEach((sc) => w.appendChild(caseCardEl(sc)));
+    [1, 2, 3].forEach(d => {
+      const list = cases.filter(c => { const m = metaFor(c.id); return m && m.difficulty === d; });
+      if (list.length) box.appendChild(shelfRowEl(DIFF_NAMES[d], list.map(posterCardEl)));
     });
   }
 }
 
-function renderHome() {
-  if (!axisBuilt) {
-    const tabs = $("axis-tabs");
-    AXES.forEach((a) => {
-      const b = document.createElement("button");
-      b.className = "axis-tab";
-      b.dataset.axis = a.id;
-      b.textContent = a.label;
-      b.setAttribute("role", "tab");
-      b.addEventListener("click", () => { axis = a.id; renderDiscovery(); });
-      tabs.appendChild(b);
+function renderAxisTabs() {
+  const box = $("axis-tabs");
+  box.innerHTML = "";
+  AXES.forEach(a => {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.className = "axis-tab" + (axis === a.id ? " active" : "");
+    b.setAttribute("role", "tab");
+    b.textContent = a.label;
+    b.addEventListener("click", () => {
+      $("search-input").value = "";
+      axis = a.id;
+      renderAxisTabs();
+      renderMore();
     });
+    box.appendChild(b);
+  });
+}
+
+function renderHome() {
+  if (!homeWired) {
     $("btn-generate").addEventListener("click", runGenerate);
-    $("gen-input").addEventListener("keydown", (e) => { if (e.key === "Enter") runGenerate(); });
-    $("search-input").addEventListener("input", renderDiscovery);
+    $("gen-input").addEventListener("keydown", (e) => { if (e.key === "Enter" && !e.isComposing) runGenerate(); });
+    document.querySelectorAll(".gen-examples button").forEach(b => {
+      b.addEventListener("click", () => { $("gen-input").value = b.dataset.place; runGenerate(); });
+    });
+    $("btn-hero-umeda").addEventListener("click", () => openDetail("umeda"));
+    $("search-input").addEventListener("input", renderMore);
     $("btn-shuffle").addEventListener("click", () => {
       const ids = Object.keys(SCENARIOS);
       const pick = ids[Math.floor(Math.random() * ids.length)];
@@ -835,10 +841,11 @@ function renderHome() {
       btn.textContent = "ファイルを引き抜いています…";
       setTimeout(() => { btn.textContent = "おまかせ捜査"; openDetail(pick); }, 650);
     });
-    axisBuilt = true;
+    homeWired = true;
   }
-  if ($("search-input").value.trim() === "") axis = axis || "shelves";
-  renderDiscovery();
+  renderAxisTabs();
+  renderMainShelf();
+  renderMore();
 }
 
 /* ---------- 画面1.5: 事件ファイル詳細 ---------- */
@@ -866,6 +873,8 @@ function openDetail(id) {
   ];
   $("detail-table").innerHTML = rows.map((r) => "<div><dt>" + r[0] + "</dt><dd>" + r[1] + "</dd></div>").join("");
   $("detail-spot-count").textContent = "（全" + sc.spots.length + "件）";
+  $("detail-ribbon").classList.toggle("hidden", id.indexOf("gen-") === 0);
+  $("detail-map").src = "https://maps.google.com/maps?q=" + encodeURIComponent(sc.spots[0].query) + "&z=15&output=embed";
   $("detail-spots").innerHTML = sc.spots.map((s, i) => "<li><span class='num-kanji'>" + KANJI_NUM[i] + "</span>" + s.name + "</li>").join("");
   const themes = $("detail-themes");
   themes.innerHTML = "";
@@ -873,7 +882,11 @@ function openDetail(id) {
     const b = document.createElement("button");
     b.className = "theme-chip" + (state.theme === t.id ? " selected" : "");
     b.textContent = t.label;
-    b.addEventListener("click", () => { state.theme = t.id; openDetail(detailId); });
+    b.addEventListener("click", () => {
+      state.theme = t.id;
+      document.querySelectorAll("#detail-themes .theme-chip").forEach(c => c.classList.remove("selected"));
+      b.classList.add("selected");
+    });
     themes.appendChild(b);
   });
   showScreen("detail");
@@ -891,7 +904,7 @@ function startCase() {
   state.attempts = 0;
 
   const caseNo = Object.keys(SCENARIOS).indexOf(sc.id) + 1;
-  $("case-place").textContent = "CASE 0" + caseNo + " — " + sc.place;
+  $("case-place").textContent = "CASE " + String(caseNo).padStart(2, "0") + " — " + sc.place;
   $("status-no").textContent = "第" + caseNo + "事件";
   $("status-title").textContent = sc.title;
   $("status-clue").textContent = "0/" + sc.spots.length;
@@ -1171,8 +1184,8 @@ function showResult() {
   const used = state.hintUsed;
   let rank, rankName;
   if (used === 0) { rank = "S"; rankName = "名探偵"; }
-  else if (used <= 2) { rank = "A"; rankName = "腕利き探偵"; }
-  else if (used <= 4) { rank = "B"; rankName = "一人前探偵"; }
+  else if (used === 1) { rank = "A"; rankName = "腕利き探偵"; }
+  else if (used === 2) { rank = "B"; rankName = "一人前探偵"; }
   else { rank = "C"; rankName = "見習い探偵"; }
   $("result-rank").innerHTML =
     '<div class="rank-circle">' + rank + "</div>" +
@@ -1190,6 +1203,12 @@ function showResult() {
     "&theme=" + encodeURIComponent(state.theme) +
     "&result=solved";
   $("share-url").value = url;
+  const isGenCase = sc.id.indexOf("gen-") === 0;
+  $("share-row").classList.toggle("hidden", isGenCase);
+  $("share-gen-note").classList.toggle("hidden", !isGenCase);
+  $("result-credits").textContent = isGenCase
+    ? "事件生成： なぞまち生成エンジン ／ 地図： Google Maps ／ 公開： Firebase Hosting"
+    : "事件設計： Gemini ／ 地図： Google Maps ／ 公開： Firebase Hosting";
   $("copy-done").classList.add("hidden");
   showScreen("result");
 }
@@ -1241,9 +1260,12 @@ function init() {
     });
   });
 
+  try {
+    (JSON.parse(localStorage.getItem("nz-gen-places") || "[]")).forEach((p) => { try { generateCase(p); } catch (e) {} });
+  } catch (e) {}
   renderHome();
   $("btn-share-challenge").addEventListener("click", () => openDetail(state.place));
-  $("btn-back-home").addEventListener("click", () => showScreen("home"));
+  $("btn-back-home").addEventListener("click", () => { renderHome(); showScreen("home"); });
   $("btn-detail-start").addEventListener("click", () => { state.place = detailId; startCase(); });
   $("btn-investigate").addEventListener("click", startInvestigate);
   $("btn-collect").addEventListener("click", collectClue);

@@ -909,3 +909,53 @@ h1 {
 }
 .gen-btn:disabled { opacity: .55; cursor: wait; }
 .gen-status { min-height: 1.4em; color: var(--blue); font-size: .85rem; font-weight: 700; margin: 8px 2px 0; }
+/* ================= v4: ヒーロー＋ポスターカード ================= */
+.hero { position: relative; margin: 2px -16px 20px; overflow: hidden; border-bottom: 3px solid var(--ink); background: #10151B; }
+.hero-bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; animation: kenburns 16s ease-in-out infinite alternate; }
+@keyframes kenburns { from { transform: scale(1); } to { transform: scale(1.09); } }
+.hero-shade { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(10,14,18,.6) 0%, rgba(10,14,18,.3) 42%, rgba(10,14,18,.93) 100%); }
+.hero-inner { position: relative; padding: 24px 20px 20px; color: #fff; }
+.hero-logo { font-family: var(--font-head); font-weight: 900; font-size: 2.5rem; line-height: 1.05; letter-spacing: .02em; text-shadow: 0 2px 14px rgba(0,0,0,.45); }
+.hero-logo span { color: #FFD23F; }
+.hero-sub { font-family: var(--font-head); font-weight: 700; font-size: .92rem; letter-spacing: .14em; color: #FFD23F; margin-top: 6px; text-shadow: 0 1px 8px rgba(0,0,0,.5); }
+.hero-copy { font-family: var(--font-head); font-weight: 700; font-size: 1.28rem; line-height: 1.55; margin: 14px 0 16px; text-shadow: 0 2px 10px rgba(0,0,0,.5); }
+.gen-pill { display: flex; align-items: center; background: #fff; border-radius: 999px; padding: 5px; box-shadow: 0 10px 28px rgba(0,0,0,.4); }
+.gen-pill input { flex: 1; min-width: 0; border: none; background: transparent; font: inherit; font-size: 1.02rem; padding: 10px 14px; color: var(--ink); }
+.gen-pill input:focus { outline: none; }
+.gen-pill button { flex: none; border: none; cursor: pointer; background: var(--red); color: #fff; font-family: var(--font-head); font-weight: 900; font-size: 1rem; border-radius: 999px; padding: 12px 20px; }
+.gen-pill button:disabled { opacity: .55; }
+.gen-examples { display: flex; align-items: center; gap: 8px; margin-top: 12px; font-size: .85rem; color: rgba(255,255,255,.85); }
+.gen-examples button { background: rgba(255,255,255,.14); color: #fff; border: 1.5px solid rgba(255,255,255,.65); border-radius: 999px; padding: 5px 14px; font: inherit; font-size: .85rem; cursor: pointer; }
+.hero .gen-status { min-height: 1.4em; margin: 10px 2px 0; font-size: .88rem; color: #FFE9A8; }
+.hero-sub-cta { display: inline-block; margin-top: 12px; background: none; border: none; border-bottom: 2px solid #FFD23F; color: #fff; font: inherit; font-weight: 700; font-size: .95rem; padding: 2px 0; cursor: pointer; }
+.hero-tech { margin-top: 16px; font-size: .72rem; letter-spacing: .08em; color: rgba(255,255,255,.72); }
+.steps-strip { position: relative; display: flex; margin: 2px 0 20px; padding: 0 4px; }
+.steps-strip::before { content: ""; position: absolute; top: 13px; left: 18%; right: 18%; height: 3px; background: var(--ink); border-radius: 2px; }
+.step-cell { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 7px; font-family: var(--font-head); font-weight: 700; font-size: .8rem; line-height: 1.3; text-align: center; color: var(--ink); }
+.step-dot { position: relative; z-index: 1; width: 26px; height: 26px; border-radius: 50%; background: var(--ink); color: #fff; display: inline-flex; align-items: center; justify-content: center; font-size: .85rem; box-shadow: 0 0 0 5px #F6F7F5; }
+/* ポスターカード */
+.poster-row { display: flex; gap: 12px; overflow-x: auto; padding: 4px 2px 12px; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; }
+.poster-card { position: relative; flex: 0 0 198px; aspect-ratio: 3 / 4; border: none; border-radius: 14px; overflow: hidden; padding: 0; cursor: pointer; text-align: left; background: #1A2027; box-shadow: 0 6px 18px rgba(16,21,27,.28); scroll-snap-align: start; font: inherit; color: #fff; }
+.poster-card img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.poster-noimg { position: absolute; inset: 0; background: repeating-linear-gradient(45deg, #232A31 0 14px, #1D242B 14px 28px); }
+.poster-scrim { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(10,14,18,.06) 40%, rgba(10,14,18,.88) 88%); }
+.poster-card .stamp { top: 10px; right: 10px; font-size: .78rem; }
+.poster-gen { position: absolute; top: 10px; left: 10px; background: var(--yellow); color: var(--ink); font-family: var(--font-head); font-weight: 900; font-size: .72rem; padding: 3px 9px; border-radius: 999px; border: 1.5px solid var(--ink); }
+.poster-body { position: absolute; left: 0; right: 0; bottom: 0; padding: 12px 13px 13px; display: flex; flex-direction: column; gap: 3px; }
+.poster-place { font-size: .78rem; font-weight: 700; letter-spacing: .12em; color: #FFD23F; }
+.poster-title { font-family: var(--font-head); font-weight: 900; font-size: 1.02rem; line-height: 1.35; }
+.poster-meta { font-size: .76rem; color: rgba(255,255,255,.85); line-height: 1.45; }
+.upcoming-card { cursor: default; }
+/* 詳細：Geminiリボンと実地図 */
+.gemini-ribbon { display: inline-block; background: #1E2226; color: #fff; font-family: var(--font-head); font-weight: 700; font-size: .78rem; letter-spacing: .06em; padding: 5px 12px; border-radius: 999px; margin-bottom: 8px; }
+.gemini-ribbon::before { content: "◆ "; color: #8AB4F8; }
+.detail-map { margin: 18px 0 4px; }
+.detail-map iframe { width: 100%; height: 230px; border: 2px solid var(--ink); border-radius: 6px; display: block; background: #E8ECEF; }
+.detail-map figcaption { font-size: .78rem; color: var(--ink-dim); margin-top: 6px; }
+.result-credits { text-align: center; font-size: .74rem; color: var(--ink-dim); margin-top: 14px; letter-spacing: .04em; }
+@media (prefers-reduced-motion: reduce) { .hero-bg { animation: none; } }
+
+/* v4.1: ホームではアプリバーを隠し、ヒーローをタイトル画面にする */
+body[data-screen="home"] .topbar { display: none; }
+body[data-screen="home"] main { padding-top: 0; }
+body[data-screen="home"] .hero { margin-top: 0; }

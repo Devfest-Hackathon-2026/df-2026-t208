@@ -8,9 +8,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600&family=BIZ+UDPGothic:wght@400;700&family=Zen+Kaku+Gothic+New:wght@700;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="style.css?v=4">
 </head>
-<body>
+<body data-screen="home">
 <div id="splash" role="presentation">
 <div class="splash-sign">
 <div class="splash-logo">なぞまち<span>ワールド</span></div>
@@ -39,35 +39,47 @@
 <button id="btn-share-challenge" class="btn-secondary hidden">この事件に挑戦する</button>
 </div>
 
-<!-- 画面1: 事件ファイルの発見（棚・検索・詳細への入口） -->
+<!-- 画面1: ヒーロー（生成）＋棚＋もっと探す -->
 <section id="screen-home" class="screen">
-<h1>どの街の事件を、捜査する？</h1>
-<p class="lead">実在の街で起きた怪事件のファイルが、ここに眠っている。場所から、時間から、気分から——探し方は自由だ。気になるファイルを1件選んで、詳細を開いてみよう。</p>
-<div class="badge-row">
-<span class="badge">おうちモード（Street View捜査）専用</span>
-<span class="badge">全3件 公開中</span>
+<div class="hero">
+<img class="hero-bg" src="assets/hero-gion.webp" alt="">
+<div class="hero-shade"></div>
+<div class="hero-inner">
+<div class="hero-logo">なぞまち<span>ワールド</span></div>
+<div class="hero-sub">地球の全部が、事件現場になる。</div>
+<p class="hero-copy">行き先を入れるだけ。<br>その街で、事件が起きる。</p>
+<div class="gen-pill">
+<input id="gen-input" type="text" placeholder="行き先の街（例：松山）" autocomplete="off" maxlength="24">
+<button id="btn-generate" type="button">事件を起こす</button>
 </div>
-
-<div class="gen-panel">
-<div class="gen-label num">CASE GENERATOR — 事件生成エンジン</div>
-<h2 class="gen-title">行き先から、事件を生成する</h2>
-<p class="gen-text">行く街が決まったら、その街専用の事件をその場で生成します。用意された3件から選ぶのではなく、君の旅のための1件を。地元の街でも、修学旅行の行き先でも。</p>
-<div class="gen-row">
-<input id="gen-input" class="gen-input" type="text" placeholder="行き先の街を入力（例：京都、松山、鎌倉）" autocomplete="off" maxlength="24">
-<button id="btn-generate" class="gen-btn" type="button">事件を生成する</button>
+<div class="gen-examples">
+<span>たとえば</span>
+<button type="button" data-place="松山">松山</button>
+<button type="button" data-place="鎌倉">鎌倉</button>
+<button type="button" data-place="高知">高知</button>
 </div>
 <p id="gen-status" class="gen-status"></p>
+<button id="btn-hero-umeda" class="hero-sub-cta" type="button">まずは梅田の事件で遊ぶ →</button>
+<div class="hero-tech">Powered by Google Maps ・ Gemini ・ Firebase</div>
+</div>
 </div>
 
-<div id="axis-tabs" class="axis-tabs" role="tablist"></div>
-<div id="discovery"></div>
-<h2 class="step-title"><span class="step-num num">検</span> ファイルを検索する</h2>
+<div class="steps-strip">
+<div class="step-cell"><span class="step-dot num">1</span><span>行き先を入れる</span></div>
+<div class="step-cell"><span class="step-dot num">2</span><span>事件が起きる</span></div>
+<div class="step-cell"><span class="step-dot num">3</span><span>歩いて解く</span></div>
+</div>
+
+<div id="discovery-main"></div>
+
+<h2 class="step-title"><span class="step-num num">探</span> もっと探す</h2>
 <div class="search-row">
-<input id="search-input" class="search-input" type="search" placeholder="資料検索：場所・事件名・キーワード（例：祇園、水時計）" autocomplete="off">
+<input id="search-input" class="search-input" type="search" placeholder="資料検索：場所・事件名・キーワード" autocomplete="off">
 <button id="btn-shuffle" class="shuffle-btn" type="button">おまかせ捜査</button>
 </div>
 <p class="search-note">「おまかせ捜査」は、ファイルを1件ランダムに引き抜きます。</p>
-
+<div id="axis-tabs" class="axis-tabs" role="tablist"></div>
+<div id="discovery-more"></div>
 
 <p class="note">※ 全事件とも、おうちモード（Street View風の地図で捜査）で遊べます。事件は生成エンジンが実在のスポットから組み立てるため、今後もファイルは増え続けます。</p>
 </section>
@@ -79,6 +91,7 @@
 <img id="detail-photo" src="" alt="">
 <figcaption id="detail-photo-caption"></figcaption>
 </figure>
+<div id="detail-ribbon" class="gemini-ribbon hidden">シナリオ設計： Gemini</div>
 <div class="detail-filed num"><span id="detail-fileno"></span> ／ <span id="detail-filed"></span></div>
 <div id="detail-place" class="detail-place"></div>
 <h1 id="detail-title"></h1>
@@ -86,6 +99,11 @@
 
 <h2 class="step-title"><span class="step-num num">1</span> 事件概要</h2>
 <dl id="detail-table" class="detail-table"></dl>
+
+<figure class="detail-map">
+<iframe id="detail-map" title="舞台の地図" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+<figcaption>舞台は実在のスポット — Google Maps</figcaption>
+</figure>
 
 <h2 class="step-title"><span class="step-num num">2</span> 捜査スポット <span id="detail-spot-count" class="spot-count"></span></h2>
 <ol id="detail-spots" class="detail-spots"></ol>
@@ -397,11 +415,13 @@
 
 <h2 class="step-title"><span class="step-num num">3</span> 結果をシェアする</h2>
 <p class="lead">同じ事件への挑戦リンクを友だちに送れます。</p>
-<div class="share-row">
+<div class="share-row" id="share-row">
 <input id="share-url" type="text" readonly>
 <button id="btn-copy" class="btn-secondary">コピー</button>
 </div>
 <p id="copy-done" class="copy-done hidden">コピーしました！</p>
+<p id="share-gen-note" class="note hidden">生成した事件は、この端末でのみ遊べます。シェアは監修済みの事件（梅田・祇園・浅草）で使えます。</p>
+<p id="result-credits" class="result-credits"></p>
 
 <button id="btn-again" class="btn-primary">別の事件に挑戦する</button>
 </section>
@@ -414,7 +434,7 @@ Entertainment × Tourism<br>
 資料写真クレジット： 大阪・梅田 / phoenix_max（Wikimedia Commons, CC BY 3.0）ほか。詳細は提出資料の素材利用シートに記載。
 </footer>
 
-<script>setTimeout(function(){var s=document.getElementById("splash"); if(s){s.classList.add("gone"); s.remove();}},2100); document.addEventListener("click",function(){var s=document.getElementById("splash"); if(s){s.classList.add("gone"); s.remove();}},{once:false});</script>
-<script src="app.js"></script>
+<script>setTimeout(function(){var s=document.getElementById("splash"); if(s){s.classList.add("gone"); s.remove();}},1500); document.addEventListener("click",function(){var s=document.getElementById("splash"); if(s){s.classList.add("gone"); s.remove();}},{once:false});</script>
+<script src="app.js?v=4"></script>
 </body>
 </html>
